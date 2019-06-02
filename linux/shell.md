@@ -2,9 +2,9 @@
 
 ## Important commands
 
-command | meaning  
-- | -  
-type -a | 查看命令在系统中的可用情况
+| command | meaning |
+| - | - |   
+| type -a | 查看命令在系统中的可用情况|  
 
 ## shell script
 
