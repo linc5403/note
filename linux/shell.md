@@ -28,9 +28,9 @@ f - 普通文件。
 * -mtime(modify)        -ctime(create)          -atime(access)  
 > 参数+表示在此内，\-表示在此之外  
 > 
-> `-mtime +3` | 3天内  
-> - | -  
-> `-mtime -1` | 1天前  
+> | `-mtime +3` | 3天内 |    
+> | :-: | :-: |   
+> | `-mtime -1` | 1天前 |    
 
 * -newer
 
@@ -148,6 +148,6 @@ myfile
 
 ### 标准输入，标准输出和错误输出
 
-command filename 2>&1 | 标准输出和错误输出重定向到一个文件
-- | -
-command 2 > filename |  错误输出重定向到一个文件
+| command filename 2>&1 | 标准输出和错误输出重定向到一个文件 |  
+| :-: | :-:  |  
+| command 2 > filename |  错误输出重定向到一个文件 |  
