@@ -12,6 +12,8 @@
     * [cat](#cat)
     * [tee](#tee)
     * [标准输入，标准输出和错误输出](#标准输入标准输出和错误输出)
+    * [grep](#grep)
+    * [awk](#awk)
 
 <!-- vim-markdown-toc -->
 
@@ -166,3 +168,70 @@ myfile
 | command filename 2>&1 | 标准输出和错误输出重定向到一个文件 |  
 | :-: | :-:  |  
 | command 2 > filename |  错误输出重定向到一个文件 |  
+
+### grep
+
+* 通配符 \*  
+**表示任意多个之前的字符**  
+**查找vim\*vim**    
+> ```
+> grep "vim.*vim" find_out
+> -rw-r--r--  1 linchuan  staff  9929 May 25 20:35 .//vim/vim.md
+> -rw-r--r--  1 linchuan  staff  655 May 25 20:35 .//vim/vim-build-from-source-mac.md
+> -rw-r--r--  1 linchuan  staff  2811 Oct 30  2018 .//vim/vim2.md
+> -rw-r--r--  1 linchuan  staff  5373 May 25 20:35 .//vim/vim-build-from-source-debian.md
+> -rw-r--r--  1 linchuan  staff  3838 May 25 20:35 .//vim/zsh-vim-mode.md
+> ```
+
+* 通配符 .  
+**表示任意1个字符**
+
+* \^ 匹配行首  
+```
+grep "^vim" filename
+vim.md
+vim-build-from-source-mac.md
+vim2.md
+vim-build-from-source-debian.md
+```
+
+* \$ 匹配行尾  
+```
+grep "sample$" filename
+commit-msg.sample
+pre-rebase.sample
+pre-commit.sample
+applypatch-msg.sample
+fsmonitor-watchman.sample
+```
+
+* \\{1, 3\\} 匹配出现次数  
+**\\{1, \\} 一次以上**  
+**\\{1\\} 刚好一次**  
+```
+note  grep "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" ~/.ssh/config
+HOST 121.196.213.142
+Host 192.168.1.66
+Host 40.125.172.62
+Host 139.219.10.159
+```
+
+### awk  
+
+* BEGIN END
+
+`awk 'BEGIN {print "FILENAME\n--------------------"} {print $NF} END {print "end of report"}' find_out`
+
+* FILENAME  
+**当前文件名**
+
+* NR
+**number of record, 行号**
+
+* NF
+**number of field, 域号**  
+'{print $NF}' 用来打印最后一列
+
+* F
+**定义分割符号**  
+
