@@ -1,5 +1,20 @@
 # Shell
 
+<!-- vim-markdown-toc GFM -->
+
+* [Important commands](#important-commands)
+* [shell script](#shell-script)
+    * [文件类型](#文件类型)
+    * [find](#find)
+    * [xargs](#xargs)
+    * [echo](#echo)
+    * [read](#read)
+    * [cat](#cat)
+    * [tee](#tee)
+    * [标准输入，标准输出和错误输出](#标准输入标准输出和错误输出)
+
+<!-- vim-markdown-toc -->
+
 ## Important commands
 
 | command | meaning |
