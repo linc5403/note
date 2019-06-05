@@ -232,6 +232,16 @@ Host 139.219.10.159
 **number of field, 域号**  
 '{print $NF}' 用来打印最后一列
 
-* F
+* -F
 **定义分割符号**  
+`  master  ~/iCloud/note  awk '{print $NF}' find_out | awk -F/ '{print $NF}' | grep "md$"`
 
+* 匹配  
+**~/re/**
+> ```
+> awk '{if ($NF~/md$/) print $0}' find_out
+> awk '{if ($0 ~/\.md$/) print $0}' find_out
+> awk '{if ($6 !~/May/) print $0}' find_out
+> awk '{if ($6 ~/May/) print $0}' find_out
+> ```
+> **注意!与~之间没有空格**  
