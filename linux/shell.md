@@ -3,7 +3,7 @@
 <!-- vim-markdown-toc GFM -->
 
 * [Important commands](#important-commands)
-* [shell script](#shell-script)
+* [shell cmd](#shell-cmd)
     * [文件类型](#文件类型)
     * [find](#find)
     * [xargs](#xargs)
@@ -29,7 +29,7 @@
 | - | - |   
 | type -a | 查看命令在系统中的可用情况|  
 
-## shell script
+## shell cmd
 
 ### 文件类型
 
@@ -78,6 +78,8 @@ f - 普通文件。
 * -max-depth  
 **应该放在其他选项之前**  
 1: 只搜索当前目录  
+
+[top](#Shell)
 
 ### xargs
 
