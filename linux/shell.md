@@ -18,8 +18,20 @@
     * [合并与分割](#合并与分割)
         * [sort](#sort)
 * [shell变量和参数](#shell变量和参数)
-    * [参数的所用](#参数的所用)
+    * [变量设置时的不同模式](#变量设置时的不同模式)
+    * [参数的引用](#参数的引用)
     * [各种引号](#各种引号)
+* [条件测试](#条件测试)
+    * [文件状态测试](#文件状态测试)
+    * [组合](#组合)
+    * [字符串测试](#字符串测试)
+    * [数值测试](#数值测试)
+    * [expr](#expr)
+* [控制流结构](#控制流结构)
+    * [if then else](#if-then-else)
+    * [case](#case)
+    * [for](#for)
+    * [until](#until)
 
 <!-- vim-markdown-toc -->
 
@@ -109,28 +121,42 @@ f - 普通文件。
 > ```
 
 ### read  
-标准输入赋值到变量  
+- **标准输入赋值到变量**  
 
-```
-hunch@linchuan-test3:~/test/shell$ read name
-sdfjlkavsj bn pihef awoenkjn fsdad
-hunch@linchuan-test3:~/test/shell$ echo $name
-sdfjlkavsj bn pihef awoenkjn fsdad
+> ```
+> hunch@linchuan-test3:~/test/shell$ read name
+> sdfjlkavsj bn pihef awoenkjn fsdad
+> hunch@linchuan-test3:~/test/shell$ echo $name
+> sdfjlkavsj bn pihef awoenkjn fsdad
+> ```
+
+
+- **输入到数量多余变量数量，最后一个变量会收集剩余所有到值**  
+
+> ```
+> hunch@linchuan-test3:~/test/shell$ read name1 name2 nameall
+> aa bb cc dd ee ff gg hh
+> hunch@linchuan-test3:~/test/shell$ echo $name1
+> aa
+> hunch@linchuan-test3:~/test/shell$ echo $name2
+> bb
+> hunch@linchuan-test3:~/test/shell$ echo $nameall
+> cc dd ee ff gg hh
+> ```
+
+- **为变量赋缺省值**  
+```sh
+read a
+case ${a:=1} in
+    1|2) echo "you choose ${a}"
+        ;;
+    *) echo "must in [ 1 | 2 ]"
+        ;;
+esac
 ```
 
 
-输入到数量多余变量数量，最后一个变量会收集剩余所有到值  
-
-```
-hunch@linchuan-test3:~/test/shell$ read name1 name2 nameall
-aa bb cc dd ee ff gg hh
-hunch@linchuan-test3:~/test/shell$ echo $name1
-aa
-hunch@linchuan-test3:~/test/shell$ echo $name2
-bb
-hunch@linchuan-test3:~/test/shell$ echo $nameall
-cc dd ee ff gg hh
-```
+[top](#Shell)
 
 ### cat
 
@@ -176,6 +202,8 @@ myfile
 | command filename 2>&1 | 标准输出和错误输出重定向到一个文件 |  
 | :-: | :-:  |  
 | command 2 > filename |  错误输出重定向到一个文件 |  
+
+[top](#Shell)
 
 ### grep
 
@@ -224,6 +252,8 @@ Host 40.125.172.62
 Host 139.219.10.159
 ```
 
+[top](#Shell)
+
 ### awk  
 
 * BEGIN END
@@ -269,9 +299,22 @@ Host 139.219.10.159
 > * sort -nr +4  
 > * sort -M 4  
 
+[top](#Shell)
+
 ## shell变量和参数
 
-### 参数的所用  
+### 变量设置时的不同模式  
+***注意：:=不能单独使用，需要在其他语句中使用，如echo，if等***
+|语法 | 含义 |
+|- | - |
+|Variable-name=value | 设置实际值到variable-name |
+|Variable-name+value | 如果设置了variable-name，则重设其值 |
+|Variable-name:?value | 如果未设置variable-name，显示未定义用户错误信息 |
+|Variable-name?value | 如果未设置variable-name，显示系统错误信息 |
+|Variable-name:=value | 如果未设置variable-name，设置其值 |
+|Variable-name:-value | 同上，但是取值并不设置到variable-name，可以被替换 |
+
+### 参数的引用  
 | 参数 | 含义 |
 | :- | :- |
 | $# | 参数个数|
@@ -289,3 +332,94 @@ Host 139.219.10.159
 > 反引号用于设置系统命令的输出到变量    
 - **反斜线**  
 > 如果下一个字符有特殊含义，反斜线防止shell误解其含义   
+
+[top](#Shell)
+
+## 条件测试  
+### 文件状态测试  
+> | symbol | mean |
+> | - | - |
+> | -f | 普通文件 |
+> | -d | 目录 |
+> | -r | 可读 |
+> | -x | 可执行 |
+> | -s | 文件长度大于0 |
+
+### 组合  
+> - **-a逻辑与**  
+> - **-o逻辑或**  
+
+`[ -f abc.sh -a -x abc.sh ]`  
+abc.sh存在且可执行, **注意括号两端的空格**  
+
+### 字符串测试  
+> ```
+> [ string operator string ]
+> [ operator string ]
+> ```
+> 
+> | operator | mean |
+> | - | - |
+> | = | 两个字符串相等。   |
+> | != | 两个字符串不等。   |
+> | -z | 空串。   |
+> | -n | 非空串。   |
+
+### 数值测试  
+> `[ "number" numeric_operator "number" ]`  
+>
+> | operator | mean |
+> | - | - |
+> | -eq | 数值相等。 |
+> | -ne | 数值不相等。 |
+> | -gt | 第一个数大于第二个数。 |
+> | -lt | 第一个数小于第二个数。 |
+> | -le | 第一个数小于等于第二个数。 |
+> | -ge | 第一个数大于等于第二个数。 |
+
+### expr  
+用于数值计算  
+` expr argument operator argument `
+```
+(python3.7)  ~/bin  expr 3 + 4
+7
+```
+[top](#Shell)
+
+## 控制流结构  
+### if then else
+
+```sh
+if [ $# -lt "1" ]; then
+    echo "need at lest one param"
+else
+    echo "the params are $@"
+fi
+```
+
+### case  
+```sh
+if ! [ $# -eq "1" ]; then
+    echo "need just 1 param"
+else
+    case $1 in
+        1) echo "you input 1"
+            ;;
+        2) echo "you input 2"
+            ;;
+        *) echo "must input 1 or 2" >&2
+            exit 1
+            ;;
+    esac
+fi
+```
+
+### for  
+```sh
+for filex in ./*; do
+    echo $filex
+done
+```
+
+### until  
+until
