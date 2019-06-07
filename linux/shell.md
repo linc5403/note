@@ -304,15 +304,15 @@ Host 139.219.10.159
 ## shell变量和参数
 
 ### 变量设置时的不同模式  
-***注意：:=不能单独使用，需要在其他语句中使用，如echo，if等***
-|语法 | 含义 |
-|- | - |
-|Variable-name=value | 设置实际值到variable-name |
-|Variable-name+value | 如果设置了variable-name，则重设其值 |
-|Variable-name:?value | 如果未设置variable-name，显示未定义用户错误信息 |
-|Variable-name?value | 如果未设置variable-name，显示系统错误信息 |
-|Variable-name:=value | 如果未设置variable-name，设置其值 |
-|Variable-name:-value | 同上，但是取值并不设置到variable-name，可以被替换 |
+***注意：:=不能单独使用，需要在其他语句中使用，如echo，if等***  
+| 语法 | 含义 |
+| - | - |
+| Variable-name=value | 设置实际值到variable-name |
+| Variable-name+value | 如果设置了variable-name，则重设其值 |
+| Variable-name:?value | 如果未设置variable-name，显示未定义用户错误信息 |
+| Variable-name?value | 如果未设置variable-name，显示系统错误信息 |
+| Variable-name:=value | 如果未设置variable-name，设置其值 |
+| Variable-name:-value | 同上，但是取值并不设置到variable-name，可以被替换 |
 
 ### 参数的引用  
 | 参数 | 含义 |
@@ -422,4 +422,10 @@ done
 ```
 
 ### until  
-until
+```sh
+read a
+until [ $a -eq 100 ]; do
+    read a
+done
+```
+
