@@ -32,6 +32,10 @@
     * [case](#case)
     * [for](#for)
     * [until](#until)
+    * [while](#while)
+    * [break](#break)
+    * [continue](#continue)
+* [shell函数](#shell函数)
 
 <!-- vim-markdown-toc -->
 
@@ -121,6 +125,19 @@ f - 普通文件。
 > ```
 
 ### read  
+
+- **read -p**
+> 给出提示符，不显示换行  
+> ```sh
+> read -p "input your name: " a
+> echo $a
+> ```
+> ```
+>  ✘ (python3.7)  ~/bin  t.sh
+> input your name: abc
+> abc
+> ```
+
 - **标准输入赋值到变量**  
 
 > ```
@@ -430,3 +447,57 @@ until [ $a -eq 100 ]; do
 done
 ```
 
+### while
+- **读入文件**  
+> ```sh
+> # 从第一个参数的文件读入每一行
+> while read line; do
+>     echo $line
+> done < $1
+> ```
+
+### break  
+> ```sh
+> # break的使用
+> while :; do
+>     echo "input number in [1..5]"
+>     read input
+>     case $input in
+>         1|2|3|4|5) echo "you are right"
+>             ;;
+>         *) echo "you are wrong"
+>             break
+>             ;;
+>     esac
+> done
+> ```
+
+### continue
+> ```sh
+> # continue的使用
+> echo "input number in [1..5]"
+> while :; do
+>     read input
+>     if [ $input -le 5 -a $input -ge 1 ]; then
+>         echo "you are right"
+>         continue
+>     fi
+>     exit 0
+> done
+> ```
+
+## shell函数  
+```sh  
+function findit() {
+    if [ $# -lt 1 ]; then
+        echo "usage: findit file"
+        return 1
+    fi
+    find / -name $1 -print
+}
+```  
+```  
+ (python3.7)  ~/bin  . functions.main
+ (python3.7)  ~/bin  findit
+usage: findit file
+```  
