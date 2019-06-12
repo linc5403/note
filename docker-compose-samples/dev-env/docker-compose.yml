@@ -1,0 +1,87 @@
+version: '3.7'
+services:
+  proxy:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile_proxy
+    container_name: dev-proxy
+    restart: always
+    image: registry.cn-hangzhou.aliyuncs.com/hunch/dev-env:0.1-proxy
+    stdin_open: true
+    tty: true
+  rabbitmq:
+    container_name: dev-rabbitmq
+    hostname: my-rabbitmq
+    restart: always
+    image: rabbitmq:3.7
+    stdin_open: true
+    tty: true
+  redis:
+    container_name: dev-redis
+    restart: always
+    image: redis:5.0
+    stdin_open: true
+    tty: true
+  web:
+    # build:
+    #   dockerfile: ${AISHIPIN_PATH}/deploy/dev_env/Dockerfile_worker
+    #   context: ${AISHIPIN_PATH}
+    container_name: dev-web
+    volumes:
+      - type: bind
+        source: ${AISHIPIN_PATH}
+        target: /var/www/aishipin
+    restart: always
+    ports:
+      - '8070:8080/tcp'
+      - '8071:8081/tcp'
+    environment:
+      - CLUSTER=dev
+      - DJANGO_SETTINGS_MODULE=aivideo.settings_dev
+    image: registry.cn-hangzhou.aliyuncs.com/hunch/dev-env:0.3-web
+    depends_on:
+      - proxy
+    working_dir: /var/www/aishipin/aivideo
+    command: ["/var/www/aishipin/deploy/dev_env/start_dev_web.sh"]
+    stdin_open: true
+    tty: true
+  worker:
+    # build:
+    #   dockerfile: ${AISHIPIN_PATH}/deploy/dev_env/Dockerfile_worker
+    #   context: ${AISHIPIN_PATH}
+    container_name: dev-worker
+    volumes:
+      - type: bind
+        source: ${AISHIPIN_PATH}
+        target: /var/www/aishipin
+    restart: always
+    environment:
+      - CLUSTER=dev
+      - DJANGO_SETTINGS_MODULE=aivideo.settings_dev
+    image: registry.cn-hangzhou.aliyuncs.com/hunch/dev-env:0.3-worker
+    depends_on:
+      - proxy
+    working_dir: /var/www/aishipin/aivideo
+    command: ['python', 'manage.py', 'celery_autoreload']
+    stdin_open: true
+    tty: true
+    # render:
+    #   # build:
+    #   #   dockerfile: ${RENDER_PATH}/deploy/dev-env/Dockerfile_render
+    #   #   context: ${RENDER_PATH}
+    #   container_name: dev-render
+    #   volumes:
+    #     - type: bind
+    #       source: ${RENDER_PATH}
+    #       target: /opt/render_engine
+    #   restart: always
+    #   hostname: dev-render
+    #   environment:
+    #     - CLUSTER=dev
+    #     # - DJANGO_SETTINGS_MODULE=aivideo.settings_dev
+    #   image: registry.cn-hangzhou.aliyuncs.com/hunch/dev-env:0.3-render
+    #   depends_on:
+    #     - proxy
+    #   working_dir: /opt/render_engine
+    #   command: ['python3.6', '/opt/render_engine/run_single_task.py', 'dev-render']
+

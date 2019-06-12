@@ -1,0 +1,8 @@
+Host xx.xx.xx.xx
+    StrictHostKeyChecking no
+    Port         22
+    TCPKeepAlive=yes
+    ServerAliveInterval 10
+    ServerAliveCountMax 5
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/id_rsa

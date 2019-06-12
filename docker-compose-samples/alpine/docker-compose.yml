@@ -1,0 +1,13 @@
+version: '3.7'
+services:
+  local_proxy:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: local_proxy
+    restart: always
+    image: local/alpine_proxy:0.1
+    ports:
+      - '127.0.0.1:6666:6666'
+    stdin_open: true
+    tty: true
