@@ -23,7 +23,7 @@
     * [各种引号](#各种引号)
 * [条件测试](#条件测试)
     * [文件状态测试](#文件状态测试)
-    * [组合](#组合)
+    * [组合(仅用于文件状态测试)](#组合仅用于文件状态测试)
     * [字符串测试](#字符串测试)
     * [数值测试](#数值测试)
     * [expr](#expr)
@@ -36,6 +36,8 @@
     * [break](#break)
     * [continue](#continue)
 * [shell函数](#shell函数)
+    * [load shell文件](#load-shell文件)
+    * [getopts](#getopts)
 
 <!-- vim-markdown-toc -->
 
@@ -363,7 +365,7 @@ Host 139.219.10.159
 > | -x | 可执行 |
 > | -s | 文件长度大于0 |
 
-### 组合  
+### 组合(仅用于文件状态测试)  
 > - **-a逻辑与**  
 > - **-o逻辑或**  
 
@@ -501,3 +503,93 @@ function findit() {
  (python3.7)  ~/bin  findit
 usage: findit file
 ```  
+### load shell文件  
+
+**使用. file-path来加载shell文件，之后可以直接使用其中定义的函数**
+
+```sh
+bash-3.2$ find
+find           find2perl      find2perl5.18  findhyph       findrule       findrule5.18
+bash-3.2$ ls
+__pycache__                     functions.main                  phantomjs-2.1.1-macosx.zip
+compose.py                      img_view.py                     rec.py
+format_boost.py                 index.sh                        sox
+front_rsa                       phantomjs                       t.sh
+front_rsa.pub                   phantomjs-2.1.1-macosx          test.sh
+bash-3.2$ . functions.main
+bash-3.2$ find
+find           find2perl5.18  findit         findrule5.18
+find2perl      findhyph       findrule
+bash-3.2$ findit
+usage: findit file
+bash-3.2$ more functions.main
+#!/usr/bin/env sh
+
+function findit() {
+    if [ $# -lt 1 ]; then
+        echo "usage: findit file"
+        return 1
+    fi
+    find / -name $1 -print
+}
+bash-3.2$ unset findit
+bash-3.2$ find
+find           find2perl      find2perl5.18  findhyph       findrule       findrule5.18
+```
+
+### getopts
+- **解析命令行参数的函数**  
+> ```sh
+> function parse_cmd() {
+>     ALL=false
+>     HELP=false
+>     VERBOSE=false
+>     function usage() {
+>         echo "`basename $0` -[a h v] -c value -f file" 1>&2
+>     }
+>     while getopts ":ahvf:c:" OPTION; do
+>         case $OPTION in
+>             a)ALL=true
+>                 ;;
+>             h)HELP=true
+>                 ;;
+>             f)FILE=$OPTARG
+>                 ;;
+>             v)VERBOSE=true
+>                 ;;
+>             c)COPIES=$OPTARG
+>                 ;;
+>             \?) # usage statemant
+>                 usage
+>                 ;;
+>             :) # missing params
+>                 echo "`basename $0`: option \"-$OPTARG\" missing value" 1>&2
+>                 return 1
+>                 ;;
+>         esac
+>     done
+> 
+>     if [ -z $FILE ] || [ -z $COPIES ]; then
+>         echo "`basename $0` missing options -f -c"
+>         usage
+>         return 1
+>     fi
+> }
+> ```
+
+- **调用该函数**
+> ```sh
+> parse_cmd $@
+> 
+> case $? in
+>     1) echo "something wrong"
+>         ;;
+>     0) echo "seems ok"
+>         echo ALL is $ALL
+>         echo VERBOSE is $VERBOSE
+>         echo HELP is $HELP
+>         echo FILE is $FILE
+>         echo COPIES is $COPIES
+>         ;;
+> esac
+> ```

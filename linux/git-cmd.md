@@ -1,23 +1,31 @@
-<!-- toc -->
-
-- [git-cmd](#git-cmd)
-  * [本地目录创建远端分支](#%E6%9C%AC%E5%9C%B0%E7%9B%AE%E5%BD%95%E5%88%9B%E5%BB%BA%E8%BF%9C%E7%AB%AF%E5%88%86%E6%94%AF)
-  * [初始化配置](#%E5%88%9D%E5%A7%8B%E5%8C%96%E9%85%8D%E7%BD%AE)
-  * [reset checkout 和 revert](#reset-checkout-%E5%92%8C-revert)
-  * [pre-commit](#pre-commit)
-  * [git fetch origin branchname:branchname](#git-fetch-origin-branchnamebranchname)
-  * [获取新的远程分支](#%E8%8E%B7%E5%8F%96%E6%96%B0%E7%9A%84%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF)
-  * [创建远程分支](#%E5%88%9B%E5%BB%BA%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF)
-  * [删除本地分支](#%E5%88%A0%E9%99%A4%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF)
-  * [删除远端分支](#%E5%88%A0%E9%99%A4%E8%BF%9C%E7%AB%AF%E5%88%86%E6%94%AF)
-  * [查看所有branch分支](#%E6%9F%A5%E7%9C%8B%E6%89%80%E6%9C%89branch%E5%88%86%E6%94%AF)
-  * [submodule](#submodule)
-  * [pre-commit flake8](#pre-commit-flake8)
-  * [修改commit msg](#%E4%BF%AE%E6%94%B9commit-msg)
-  * [merge](#merge)
-
-<!-- tocstop -->
 # git-cmd
+
+<!-- vim-markdown-toc GFM -->
+
+* [本地目录创建远端分支](#本地目录创建远端分支)
+* [初始化配置](#初始化配置)
+* [reset checkout 和 revert](#reset-checkout-和-revert)
+* [pre-commit hook](#pre-commit-hook)
+* [git fetch origin branchname:branchname](#git-fetch-origin-branchnamebranchname)
+* [获取新的远程分支](#获取新的远程分支)
+* [创建分支](#创建分支)
+    * [创建本地分支](#创建本地分支)
+    * [创建远程分支](#创建远程分支)
+* [删除分支](#删除分支)
+    * [删除本地分支](#删除本地分支)
+    * [删除远端分支](#删除远端分支)
+* [查看所有branch分支](#查看所有branch分支)
+* [submodule](#submodule)
+* [修改commit msg](#修改commit-msg)
+* [merge](#merge)
+    * [merge特定commit](#merge特定commit)
+* [reset added](#reset-added)
+* [delete tags](#delete-tags)
+    * [delete remote tags](#delete-remote-tags)
+    * [delete local tags](#delete-local-tags)
+
+<!-- vim-markdown-toc -->
+
 ## 本地目录创建远端分支
 ```
 git init
@@ -51,11 +59,9 @@ https://github.com/geeeeeeeeek/git-recipes/wiki/5.2-%E4%BB%A3%E7%A0%81%E5%9B%9E%
 
 
 
-## pre-commit
-
+## pre-commit hook
 
 `$ flake8 --install-hook git`
-
 `$ git config --bool flake8.strict true`
 
 
@@ -69,21 +75,22 @@ https://github.com/geeeeeeeeek/git-recipes/wiki/5.2-%E4%BB%A3%E7%A0%81%E5%9B%9E%
 
 获取远程分支remoteName 到本地新分支localName，并跳到localName分支
 
-## 创建远程分支
-1. 创建本地分支
+## 创建分支
+### 创建本地分支
 `$ git checkout -b localName`
 
-2. 创建远程分支
+### 创建远程分支
 `git push origin loaclName:remoteName`
 注意:左右不能有空格
 
 [TOP](#git-cmd)
 
-## 删除本地分支  
+## 删除分支  
+### 删除本地分支
 `git branch -D branch_name`
 
-## 删除远端分支  
-`git push origin --delete branch_name`
+### 删除远端分支  
+`git push --delete origin branch_name`
 
 ## 查看所有branch分支
 `git branch -a`
@@ -96,15 +103,6 @@ https://github.com/geeeeeeeeek/git-recipes/wiki/5.2-%E4%BB%A3%E7%A0%81%E5%9B%9E%
     git submodule init
     git submodule update
     git submodule deinit --all
-
-
-
-## pre-commit flake8
-
-
-`$ flake8 --install-hook git`
-
-`$ git config --bool flake8.strict true`
 
 ## 修改commit msg   
 `git commit --amend`  
@@ -120,7 +118,7 @@ git merge feature/login
     git cherry-pick 62ecb3
 ```
 
-### reset added
+## reset added
 ```
 git reset HEAD 指定文件
 git reset HEAD aivideo/social/migrations/0001_initial.py
@@ -129,3 +127,8 @@ git reset HEAD aivideo/social/migrations/0001_initial.py
     
 [TOP](#git-cmd)
 
+## delete tags  
+### delete remote tags
+`git tag | grep -v "^3" |xargs git push --delete origin`
+### delete local tags
+`git tag | xargs git tag --delete`
