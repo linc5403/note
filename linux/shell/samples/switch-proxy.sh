@@ -7,8 +7,8 @@
 #
 # @description : switch proxy between hongkong and us 
 ######################################################################
-JUST_SHOW=false
-JUST_SHOW_USAGE=false
+SHOW_STATUS=false
+SHOW_USAGE=false
 
 function show_status() {
     port=`grep "socksParentProxy" $HOME/.polipo | awk -F: '{print $2}'`
@@ -32,7 +32,7 @@ function para_check() {
     }
 
     case $# in
-        0) JUST_SHOW="true"
+        0) SHOW_STATUS="true"
             return 0
             ;;
         1) if [ $1 != "-i" ] && [ $1 != "-o" ] && [ $1 != "-h" ]; then
@@ -52,7 +52,7 @@ function para_check() {
             o) location=us
                 ;;
             h) usage
-                JUST_SHOW_USAGE="true"
+                SHOW_USAGE="true"
                 return 0
                 ;;
             \*) # other
@@ -65,26 +65,17 @@ function para_check() {
 
 para_check $@
 
-# case $? in
-#     1) exit 0
-#         ;;
-#     0) 
-#         ;;
-#     *) exit -1
-# esac
-
+# error happening
 if [ $? != 0 ]; then
     exit -1
 fi
 
-
-if [ $JUST_SHOW = "true" ]; then
+if [ $SHOW_STATUS = "true" ]; then
     show_status
     exit 0
 fi
 
-
-if [ $JUST_SHOW_USAGE = "true" ]; then
+if [ $SHOW_USAGE = "true" ]; then
     exit 0
 fi
 
