@@ -7,7 +7,7 @@
 #
 # @description : switch proxy between hongkong and us 
 ######################################################################
-unset SHOW_USAGE SHOW_STATUS LOCATION CURR_PORT PORT
+unset SHOW_USAGE LOCATION CURR_PORT PORT
 
 function get_curr_port() {
   CURR_PORT=`grep "socksParentProxy" $HOME/.polipo | awk -F: '{print $2}'`
@@ -94,8 +94,6 @@ if [ ! -z $SHOW_USAGE ]; then
   exit 0
 fi
 
-get_curr_port
-
 if [ -z $LOCATION ]; then
   usage
   exit -1
@@ -111,6 +109,7 @@ case $LOCATION in
     ;;
 esac
 
+get_curr_port
 if [ $PORT -eq $CURR_PORT ]; then
   echo "already in ${LOCATION}, nothing changed."
   exit 0
