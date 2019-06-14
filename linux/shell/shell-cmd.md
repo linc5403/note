@@ -46,6 +46,10 @@ find /test/subtest -type d -name '.svn' -exec rm -rf {} \\;
 ```
 sudo find source/ -type f -name "*.jpg" -exec cp {} target \\; 
 ```
+linux  
+```
+find ./ -type f -exec cp {} ../2 \;
+```
 
 [top](#linux-cmd)
 
@@ -110,6 +114,16 @@ find asynctask/ -mtime +92 -type f -exec sudo rm -f {} \\;
 
 ```
 git status | grep aivideo | xargs rm -rf
+```
+
+### macos下xargs参数
+```
+ls -l | grep -v "^d" | grep docker | awk '{print $NF}' | xargs -I {} mv {} docker
+```
+
+### linux下xargs带参数
+```
+find ./ -maxdepth 1 -type f | grep -v "^\./\." | xargs -i mv {} test
 ```
 
 [top](#linux-cmd)
