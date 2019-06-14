@@ -60,13 +60,13 @@ curl http://127.0.0.1:9200/_cat/health
 
 
 ## nginx
-用户名 aivideo
-密码  7ygv^YHN
 
-sudo htpasswd /etc/nginx/passwords aivideo
-sudo htpasswd -D /etc/nginx/passwords aivideo
+- 添加密码  
+sudo htpasswd /etc/nginx/passwords aivideo  
+- 删除密码  
+sudo htpasswd -D /etc/nginx/passwords aivideo  
 
-requests.get(url1, auth=('aivideo', '7ygv^YHN')).content
+requests.get(url1, auth=('aivideo', 'xxxxx')).content
 
 ## 重新封装查询接口
 
@@ -74,10 +74,7 @@ requests.get(url1, auth=('aivideo', '7ygv^YHN')).content
 import requests
 query1 = '_nodes/stats/http'
 user = 'aivideo'
-passwd = '7ygv^YHN'
+passwd = 'xxxxxx'
 base_url = 'http://online_es:8088/'
 auth=(user, passwd)
 r = requests.get(base_url+query1, auth=auth)
-
-
-# 常用接口

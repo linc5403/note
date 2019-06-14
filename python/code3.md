@@ -47,7 +47,8 @@ fmt = "%Y%m%d %H:%M"
 clock = datetime.datetime.now(pytz.timezone('Asia/Shanghai')).strftime(fmt)
 ```
 
-Directive	Meaning	Notes
+```
+Directive	Meaning	Notes  
 %a	Locale’s abbreviated weekday name.	 
 %A	Locale’s full weekday name.	 
 %b	Locale’s abbreviated month name.	 
@@ -70,3 +71,4 @@ Directive	Meaning	Notes
 %Y	Year with century as a decimal number.	 
 %Z	Time zone name (no characters if no time zone exists).	 
 %%	A literal '%' character.
+```
