@@ -5,6 +5,7 @@
 * [Important commands](#important-commands)
 * [shell cmd](#shell-cmd)
     * [文件类型](#文件类型)
+    * [通配符，批量创建](#通配符批量创建)
     * [find](#find)
     * [xargs](#xargs)
     * [echo](#echo)
@@ -28,6 +29,13 @@
     * [字符串测试](#字符串测试)
     * [数值测试](#数值测试)
     * [expr](#expr)
+    * [<< HERE](#-here)
+        * [read from var](#read-from-var)
+        * [read from file](#read-from-file)
+        * [read from command output](#read-from-command-output)
+        * [read from stand input](#read-from-stand-input)
+        * [write file with multi-line](#write-file-with-multi-line)
+    * [command substitution](#command-substitution)
 * [控制流结构](#控制流结构)
     * [if then else](#if-then-else)
     * [case](#case)
@@ -59,6 +67,13 @@ c - 字符设备文件。
 p - 管道文件。
 l - 符号链接文件。
 f - 普通文件。
+```
+
+### 通配符，批量创建
+```sh
+touch {0..10}.txt
+touch {a..z}.txt
+touch {0,1,2}.txt
 ```
 
 ### find
@@ -173,6 +188,18 @@ case ${a:=1} in
     *) echo "must in [ 1 | 2 ]"
         ;;
 esac
+```
+
+- **读取文本内容**  
+***-r表示不转义解释，用raw的内容***  
+a="abc.txt"  
+```sh
+while read -r line; do echo $line; done < $a
+```
+- **读取命令结果**  
+```sh
+while read -r line; do echo $line; done <<<$(ps aux | grep hunch)
+while read -r line; do echo $line; done < <(ps aux | grep hunch)
 ```
 
 
@@ -420,6 +447,56 @@ abc.sh存在且可执行, **注意括号两端的空格**
 (python3.7)  ~/bin  expr 3 + 4
 7
 ```
+
+### << HERE
+表示一段输入  
+> ```sh
+> $ while read -r line; do echo $line; done << eof
+> asdf
+> zxcv
+> ujmasdf
+> asdf
+> eof
+> asdf
+> zxcv
+> ujmasdf
+> asdf
+> ```  
+
+#### read from var  
+a="abc
+def
+ghi"
+
+cat <<< $a
+
+#### read from file  
+a="abc.txt"  
+cat < $a  
+
+#### read from command output
+cat < <(command)  
+cat <<< $(command)  
+
+#### read from stand input  
+```sh
+$ grep "^a" <&0
+xxx
+abc
+abc
+jjj
+```
+
+#### write file with multi-line
+```sh
+cat > abc.txt <<eof
+abc
+$a
+end
+eof
+```
+
+### command substitution
 [top](#Shell)
 
 ## 控制流结构  
@@ -431,6 +508,11 @@ if [ $# -lt "1" ]; then
 else
     echo "the params are $@"
 fi
+```
+
+- 变异  
+```sh
+[ -f abc.txt ] && a="True" || a="False"
 ```
 
 ### case  
