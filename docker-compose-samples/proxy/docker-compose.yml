@@ -6,9 +6,8 @@ services:
       dockerfile: Dockerfile
     container_name: local_proxy
     restart: always
-    image: local/proxy:0.1
+    image: local/proxy:0.7
     ports:
-      - '127.0.0.1:1086:1086'
       - '127.0.0.1:8123:8123'
     stdin_open: true
     tty: true
