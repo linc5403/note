@@ -15,4 +15,8 @@ for base in $BASE_DIR; do
     done
 done
 ```
+2. 批量重命名
 
+```sh
+for i in `find ./ -name "*.list"`; do sudo mv $i ${i%.jpg}.bak; done
+```
