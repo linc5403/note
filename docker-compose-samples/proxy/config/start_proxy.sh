@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sslocal -c /config/shadowsocks.json &
+service supervisor start
 polipo -c /config/polipo.conf
