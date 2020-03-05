@@ -1,0 +1,152 @@
+* 本地初始化
+
+  #+begin_example
+    git init
+    git add .
+    git commit -m "init git"
+    git remote add origin git@github.com:linchuan1982/web.git
+    git push -u origin master
+  #+end_example
+
+* 初始化配置
+
+  #+begin_example
+    git config user.name linchuan1982   
+    git config user.email linchuan@hunch.ai  
+  #+end_example
+
+* reset, checkout 和 revert
+
++--------------+----------+------------------------------------+
+| 命令         | 作用域   | 常用情景                           |
++--------------+----------+------------------------------------+
+| git reset    | 提交层面 | 在私有分支上舍弃一些没有提交的更改 |
++--------------+----------+------------------------------------+
+| git reset    | 文件层面 | 将文件从缓存区中移除               |
++--------------+----------+------------------------------------+
+| git checkout | 提交层面 | 切换分支或查看旧版本               |
++--------------+----------+------------------------------------+
+| git checkout | 文件层面 | 舍弃工作目录中的更改               |
++--------------+----------+------------------------------------+
+| git revert   | 提交层面 | 在公共分支上回滚更改               |
++--------------+----------+------------------------------------+
+| git revert   | 文件层面 | （然而并没有）                     |
++--------------+----------+------------------------------------+
+
+** 回退已经add的文件
+
+   #+begin_example
+     git reset HEAD 指定文件
+     git reset HEAD aivideo/social/migrations/0001_initial.py
+   #+end_example
+
+** 参考
+
+[[https://gitbook.tw/chapters/using-git/reset-commit.html][reset commit]]
+
+[[https://github.com/geeeeeeeeek/git-recipes/wiki/5.2-%E4%BB%A3%E7%A0%81%E5%9B%9E%E6%BB%9A%EF%BC%9AReset%E3%80%81Checkout%E3%80%81Revert-%E7%9A%84%E9%80%89%E6%8B%A9][reset-checkout-revert]]
+
+* python flake8  pre-commit hook
+
+  #+begin_example
+    $ flake8 --install-hook git
+    $ git config --bool flake8.strict true
+  #+end_example
+
+* 分支管理
+
+** 获取远程分支
+   - checkout方式
+     #+begin_example
+       git checkout origin/remoteName -b localName
+     #+end_example
+     获取远程分支remoteName 到本地新分支localName，并跳到localName分支
+   - fetch方式
+
+     #+begin_example
+       git fetch origin branchname:branchname
+     #+end_example
+
+     可以把远程某各分支拉去到本地的branchname下，如果没有branchname，则会在本地新建branchname
+
+** 创建新分支
+   1. 创建本地分支
+
+    #+begin_example
+      $ git checkout -b localName
+    #+end_example
+
+   2. 创建远程分支
+
+    #+begin_example
+      git push origin loaclName:remoteName
+    #+end_example
+
+    *注意* ~:~ 左右不能有空格
+
+** 删除分支
+
+*** 删除本地分支
+
+    #+begin_example
+      git branch -D branch_name
+    #+end_example
+
+*** 删除远端分支  
+
+    #+begin_example
+      git push --delete origin branch_name
+    #+end_example
+
+** 查看分支
+
+*** 查看所有branch分支
+
+    #+begin_example
+      git branch -a
+    #+end_example
+
+* submodule
+
+要在git根目录执行，比如说aishipin
+
+#+begin_example
+  git submodule init
+  git submodule update
+  git submodule deinit --all
+#+end_example
+
+* 修改commit msg   
+
+  #+begin_example
+    git commit --amend  
+  #+end_example
+
+* merge
+
+** 不自动merge
+
+  #+begin_example
+    git merge --no-commit --no-ff master
+    git merge feature/login
+  #+end_example
+
+** merge特定commit **
+
+   #+begin_example
+     git cherry-pick 62ecb3
+   #+end_example
+
+* tag    
+
+** delete tags
+
+*** delete remote tags
+    #+begin_example
+      git tag | grep -v "^3" |xargs git push --delete origin
+    #+end_example
+
+*** delete local tags
+    #+begin_example
+      git tag | xargs git tag --delete
+    #+end_example

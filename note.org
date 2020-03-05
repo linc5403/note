@@ -1,0 +1,13 @@
+* chromecast投屏
+
+[[https://vitux.com/how-to-cast-video-from-ubuntu-to-chromecast/][linux 桌面投屏到投影仪]]
+
+* linux通过DLNA共享视频，图片，音乐
+
+[[https://www.omgubuntu.co.uk/2019/10/ubuntu-dlna-media-sharing-server][dlna共享]]
+
+* TODO linux 显示按键
+
+[[https://gitlab.com/wavexx/screenkey][screenkey]]
+
+
