@@ -1,0 +1,23 @@
+#+LATEX_HEADER: \usepackage{ctex}
+* Azure配置
+
+** 挂载磁盘
+   https://www.cnblogs.com/sparkdev/p/8108921.html
+   1. 格式化
+      #+begin_src sh
+	cd /dev
+	ls sd*
+	df -h
+	(echo n; echo p; echo 1; echo ; echo ; echo w) | sudo fdisk /dev/sdc
+	ls sd*
+	sudo mkfs -t ext4 /dev/sdc1
+	sudo mkdir /data && sudo mount /dev/sdc1 /data
+      #+end_src
+   2. 获取磁盘UUID：  
+      #+begin_src sh
+	sudo -i blkid
+      #+end_src
+   3. ~/etc/fstab~ 增加  
+      #+begin_example
+	UUID=9cc7717c-e8b6-40c0-9bd1-967ec302c86d       /data   ext4    defaults,nofail,barrier=0       1       2
+      #+end_example
