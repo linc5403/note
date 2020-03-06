@@ -107,7 +107,7 @@
     #+end_example
 
 * submodule
-
+** 使用已有的项目
 要在git根目录执行，比如说aishipin
 
 #+begin_example
@@ -116,6 +116,10 @@
   git submodule deinit --all
 #+end_example
 
+** TODO 管理submodule
+** 参考
+   [[https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97][官方文档]]
+
 * 修改commit msg   
 
   #+begin_example
@@ -123,7 +127,6 @@
   #+end_example
 
 * merge
-
 ** 不自动merge
 
   #+begin_example
