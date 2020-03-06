@@ -16,7 +16,6 @@
 
 ** win
 | 按键           | 行为                                                            | 备注                            |
-| -              | -                                                               | -                               |
 | Ctrl+G         | Find Class                                                      |                                 |
 | Ctrl+Shift+N   | Find file                                                       |                                 |
 | Ctrl+Q         | Quick document lookup                                           | 展示某个类或方法的API说明文档   |

@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-03-06 Fri 10:24 -->
+<!-- 2020-03-06 Fri 11:10 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -246,25 +246,334 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org66b84f7">1. docker cmd</a>
+<li><a href="#orgc7ef962">1. docker</a>
 <ul>
-<li><a href="#org76cadf0">1.1. 删除</a></li>
-<li><a href="#org54b04c0">1.2. copy file</a></li>
+<li><a href="#org19f3280">1.1. linux下的安装</a>
+<ul>
+<li><a href="#orgce2c511">1.1.1. Step 1 apt-get install docker-ce</a></li>
+<li><a href="#org4a9ee68">1.1.2. Step 2 — Executing the Docker Command Without Sudo (Optional)</a></li>
+<li><a href="#org48f5dda">1.1.3. Step 3 修改docker数据存储路径</a></li>
 </ul>
 </li>
-<li><a href="#orgee3bd94">2. docker-compose</a>
-<ul>
-<li><a href="#org62b3105">2.1. docker-compose</a></li>
-<li><a href="#org9f5ba69">2.2. compose 不退出</a></li>
-<li><a href="#orgba8b250">2.3. docker-compose安装</a></li>
+<li><a href="#orgc9e1758">1.2. <span class="todo TODO">TODO</span> 国内仓库</a></li>
+<li><a href="#org08c51cb">1.3. 常用命令</a></li>
+<li><a href="#org5759535">1.4. 删除</a></li>
+<li><a href="#orgfdad3b4">1.5. copy file</a></li>
 </ul>
 </li>
+<li><a href="#org5ec973f">2. docker-compose</a>
+<ul>
+<li><a href="#orga1ae837">2.1. docker-compose</a></li>
+<li><a href="#org647f5b6">2.2. compose 不退出</a></li>
+<li><a href="#orgb773482">2.3. docker-compose安装</a></li>
+</ul>
+</li>
+<li><a href="#org958f54b">3. <span class="todo TODO">TODO</span> docker-file</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org66b84f7" class="outline-2">
-<h2 id="org66b84f7"><span class="section-number-2">1</span> docker cmd</h2>
+<div id="outline-container-orgc7ef962" class="outline-2">
+<h2 id="orgc7ef962"><span class="section-number-2">1</span> docker</h2>
 <div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org19f3280" class="outline-3">
+<h3 id="org19f3280"><span class="section-number-3">1.1</span> linux下的安装</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-orgce2c511" class="outline-4">
+<h4 id="orgce2c511"><span class="section-number-4">1.1.1</span> Step 1 apt-get install docker-ce</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+The Docker installation package available in the official Debian repository may not be the latest version. To ensure we get the latest version, we'll install Docker from the official Docker repository. To do that, we'll add a new package source, add the GPG key from Docker to ensure the downloads are valid, and then install the package.
+</p>
+
+<p>
+First, update your existing list of packages:
+</p>
+<div class="org-src-container">
+<pre class="src src-shell">sudo apt update   
+</pre>
+</div>
+
+<p>
+Next, install a few prerequisite packages which let apt use packages over HTTPS:  
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo apt install apt-transport-https ca-certificates curl gnupg2 software-properties-common
+</pre>
+</div>
+
+
+<p>
+Then add the GPG key for the official Docker repository to your system:  
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+</pre>
+</div>
+
+<p>
+Add the Docker repository to APT sources:  
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+</pre>
+</div>
+
+<p>
+Next, update the package database with the Docker packages from the newly added repo:    
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo apt update
+</pre>
+</div>
+
+<p>
+Make sure you are about to install from the Docker repo instead of the default Debian repo:   
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">apt-cache policy docker-ce
+</pre>
+</div>
+
+<p>
+You'll see output like this, although the version number for Docker may be different:  
+</p>
+<pre class="example">
+Output of apt-cache policy docker-ce
+docker-ce:
+  Installed: (none)
+  Candidate: 18.06.1~ce~3-0~debian
+  Version table:
+     18.06.1~ce~3-0~debian 500
+	500 https://download.docker.com/linux/debian stretch/stable amd64 Packages
+</pre>
+
+<p>
+Notice that <code>docker-ce</code> is not installed, but the candidate for installation is from the Docker repository for Debian 9 (stretch).
+</p>
+
+<p>
+Finally, install Docker:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sh">sudo apt install docker-ce
+</pre>
+</div>
+
+<p>
+Docker should now be installed, the daemon started, and the process enabled to start on boot. Check that it's running:  
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo systemctl status docker
+</pre>
+</div>
+
+<p>
+The output should be similar to the following, showing that the service is active and running:  
+</p>
+<pre class="example">
+Output
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+   Active: active (running) since Thu 2018-07-05 15:08:39 UTC; 2min 55s ago
+     Docs: https://docs.docker.com
+  Main PID: 21319 (dockerd)
+   CGroup: /system.slice/docker.service
+	   ├─21319 /usr/bin/dockerd -H fd://
+	   └─21326 docker-containerd --config /var/run/docker/containerd/containerd.toml
+</pre>
+
+<p>
+Installing Docker now gives you not just the Docker service (daemon) but also the docker command line utility, or the Docker client. We'll explore how to use the docker command later in this tutorial.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org4a9ee68" class="outline-4">
+<h4 id="org4a9ee68"><span class="section-number-4">1.1.2</span> Step 2 — Executing the Docker Command Without Sudo (Optional)</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+<b>只有docker group的用户和root用户才能执行docker命令</b>
+</p>
+
+<p>
+By default, the docker command can only be run the root user or by a user in the docker group, which is automatically created during Docker's installation process. If you attempt to run the docker command without prefixing it with sudo or without being in the docker group, you'll get an output like this:
+</p>
+<pre class="example">
+Output
+docker: Cannot connect to the Docker daemon. Is the docker daemon running on this host?
+See 'docker run --help'.
+</pre>
+
+<p>
+If you want to avoid typing sudo whenever you run the docker command, add your username to the docker group:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo usermod -aG docker ${USER}
+</pre>
+</div>
+
+<p>
+To apply the new group membership, log out of the server and back in, or type the following:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">su - ${USER}
+</pre>
+</div>
+
+<p>
+You will be prompted to enter your user's password to continue.  
+</p>
+
+<p>
+Confirm that your user is now added to the docker group by typing:  
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">id -nG
+</pre>
+</div>
+
+<p>
+Output  
+</p>
+<pre class="example">
+sammy sudo docker
+</pre>
+
+<p>
+If you need to add a user to the docker group that you're not logged in as, declare that username explicitly using:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo usermod -aG docker username
+</pre>
+</div>
+
+<p>
+The rest of this article assumes you are running the docker command as a user in the docker group. If you choose not to, please prepend the commands with sudo.
+</p>
+
+<p>
+Let's explore the docker command next.   
+</p>
+</div>
+
+<ol class="org-ol">
+<li><a id="orgb5ebc00"></a>在tmux中将当前用户加入docker group<br />
+<div class="outline-text-5" id="text-1-1-2-1">
+<ol class="org-ol">
+<li><p>
+将用户hunch加入docker group中
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo usermod -aG docker hunch
+</pre>
+</div></li>
+<li><p>
+刷新当前session
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">newgrp docker
+</pre>
+</div></li>
+</ol>
+
+<p>
+Horribly hacky, but you could use two layers of newgrp to achieve this for a particular group:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">id -g
+</pre>
+</div>
+
+<p>
+&#x2026;will give you the current primary group ID. We'll call this orig<sub>group</sub> for the purposes of this example. Then:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">newgrp &lt;new group name&gt;  
+</pre>
+</div>
+
+<p>
+&#x2026;will switch you to that group as the primary and add it to the list of groups returned by groups or id -G. Now, a further:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">newgrp &lt;orig_group&gt;
+</pre>
+</div>
+
+<p>
+&#x2026;will get you a shell in which you can see the new group and the primary is the original one.
+</p>
+
+<p>
+This is horrible and will only get you one group added at a time, but it has helped me out a couple of times to get groups added without logging out/in my whole X session (e.g. to get fuse added as a group to a user so that sshfs will work).
+</p>
+
+<p>
+Edit : This doesn't require you to type your password either, which su will.
+</p>
+</div>
+</li>
+</ol>
+</div>
+
+<div id="outline-container-org48f5dda" class="outline-4">
+<h4 id="org48f5dda"><span class="section-number-4">1.1.3</span> Step 3 修改docker数据存储路径</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<ol class="org-ol">
+<li><p>
+<code>/etc/docker/daemon.json</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-json">{
+  "data-root": "/data/docker"
+}
+</pre>
+</div></li>
+
+<li><p>
+已有数据同步到 <code>/data/docker</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo rsync -axPS /var/lib/docker/ /data/docker
+</pre>
+</div></li>
+
+<li><p>
+重启docker
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">sudo systemctl stop docker
+sudo systemctl start docker
+sudo systemctl restart docker
+</pre>
+</div></li>
+</ol>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc9e1758" class="outline-3">
+<h3 id="orgc9e1758"><span class="section-number-3">1.2</span> <span class="todo TODO">TODO</span> 国内仓库</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<code>/etc/docker/daemon.json</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-json">{
+  "registry-mirrors": ["https://registry.docker-cn.com"]
+}
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org08c51cb" class="outline-3">
+<h3 id="org08c51cb"><span class="section-number-3">1.3</span> 常用命令</h3>
+<div class="outline-text-3" id="text-1-3">
 <div class="org-src-container">
 <pre class="src src-sh">docker info | grep 'Docker Root Dir'
 docker rmi
@@ -281,11 +590,11 @@ docker build [选项] &lt;上下文路径/URL/-&gt;
 </pre>
 </div>
 </div>
+</div>
 
-
-<div id="outline-container-org76cadf0" class="outline-3">
-<h3 id="org76cadf0"><span class="section-number-3">1.1</span> 删除</h3>
-<div class="outline-text-3" id="text-1-1">
+<div id="outline-container-org5759535" class="outline-3">
+<h3 id="org5759535"><span class="section-number-3">1.4</span> 删除</h3>
+<div class="outline-text-3" id="text-1-4">
 <pre class="example">
 docker image prune
 docker container prune
@@ -295,10 +604,9 @@ docker system df
 </div>
 </div>
 
-
-<div id="outline-container-org54b04c0" class="outline-3">
-<h3 id="org54b04c0"><span class="section-number-3">1.2</span> copy file</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-orgfdad3b4" class="outline-3">
+<h3 id="orgfdad3b4"><span class="section-number-3">1.5</span> copy file</h3>
+<div class="outline-text-3" id="text-1-5">
 <div class="org-src-container">
 <pre class="src src-sh">docker cp /opt/test/file.txt mycontainer：/opt/testnew/
 docker cp mycontainer：/opt/testnew/file.txt /opt/test/
@@ -308,8 +616,8 @@ docker cp mycontainer：/opt/testnew/file.txt /opt/test/
 </div>
 </div>
 
-<div id="outline-container-orgee3bd94" class="outline-2">
-<h2 id="orgee3bd94"><span class="section-number-2">2</span> docker-compose</h2>
+<div id="outline-container-org5ec973f" class="outline-2">
+<h2 id="org5ec973f"><span class="section-number-2">2</span> docker-compose</h2>
 <div class="outline-text-2" id="text-2">
 <pre class="example">
 docker-compose up #启动所有容器 
@@ -322,8 +630,8 @@ docker-compose down #停止并销毁容器
 </pre>
 </div>
 
-<div id="outline-container-org62b3105" class="outline-3">
-<h3 id="org62b3105"><span class="section-number-3">2.1</span> docker-compose</h3>
+<div id="outline-container-orga1ae837" class="outline-3">
+<h3 id="orga1ae837"><span class="section-number-3">2.1</span> docker-compose</h3>
 <div class="outline-text-3" id="text-2-1">
 <div class="org-src-container">
 <pre class="src src-yaml">version: "0.1"
@@ -354,9 +662,8 @@ services:
 </div>
 </div>
 
-
-<div id="outline-container-org9f5ba69" class="outline-3">
-<h3 id="org9f5ba69"><span class="section-number-3">2.2</span> compose 不退出</h3>
+<div id="outline-container-org647f5b6" class="outline-3">
+<h3 id="org647f5b6"><span class="section-number-3">2.2</span> compose 不退出</h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 Docker镜像的缺省命令是 <code>bash~，如果不加 ~-it</code>, <code>bash</code> 命令执行了自动会退出，加 <code>it</code> 后 <code>docker</code> 命令会为容器分配一个伪终端，并接管其 <code>stdin/stdout</code> 支持交互操作，这时候 <code>bash</code> 命令不会自动退出
@@ -388,8 +695,8 @@ tty: true
 </div>
 </div>
 
-<div id="outline-container-orgba8b250" class="outline-3">
-<h3 id="orgba8b250"><span class="section-number-3">2.3</span> docker-compose安装</h3>
+<div id="outline-container-orgb773482" class="outline-3">
+<h3 id="orgb773482"><span class="section-number-3">2.3</span> docker-compose安装</h3>
 <div class="outline-text-3" id="text-2-3">
 <ol class="org-ol">
 <li><p>
@@ -424,10 +731,13 @@ autoload -Uz compinit &amp;&amp; compinit -i
 </div>
 </div>
 </div>
+<div id="outline-container-org958f54b" class="outline-2">
+<h2 id="org958f54b"><span class="section-number-2">3</span> <span class="todo TODO">TODO</span> docker-file</h2>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: lin chuan</p>
-<p class="date">Created: 2020-03-06 Fri 10:24</p>
+<p class="date">Created: 2020-03-06 Fri 11:10</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
