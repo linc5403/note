@@ -1,0 +1,11 @@
+#+LATEX_HEADER: \usepackage{ctex}
+* shell命令
+* shell命令组合
+** 查看文件夹下有多少个文件
+   #+begin_src sh
+     ls -l | grep "^-" | wc -l
+   #+end_src
+** salt的命令
+   #+begin_src sh
+     sudo salt 'minion' cmd.run "sudo docker exec -it  zhiying-worker-main bash -c 'pip install --upgrade youtube-dl'
+   #+end_src
