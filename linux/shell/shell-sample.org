@@ -173,3 +173,20 @@
    #+end_src
 
    [[*shell命令][返回顶部]]
+
+** 按文件名排序
+
+   #+begin_example
+     find ./ -type f | grep ".org$" | xargs ls -l | awk -F / '{print $NF " " $0}' | sort -k 1,1 | cut -d " " -f2-
+     -rw-r--r-- 1 linc linc   605 Mar  6 09:07 ./cloud/azure-config.org
+     -rw-r--r-- 1 linc linc  9766 Mar  6 11:22 ./linux/docker/docker.org
+     -rw-r--r-- 1 linc linc 18962 Mar  7 15:21 ./linux/shell/full-shell.org
+     -rw-r--r-- 1 linc linc  3965 Mar  6 08:56 ./linux/git/git.org
+     -rw-r--r-- 1 linc linc  2375 Mar  6 11:06 ./idea/idea.org
+     -rw-r--r-- 1 linc linc   252 Mar  6 09:38 ./latex/latex.org
+     -rw-r--r-- 1 linc linc   342 Mar  7 15:23 ./meta.org
+     -rw-r--r-- 1 linc linc  5972 Mar  7 16:28 ./linux/shell/shell-sample.org
+     -rw-r--r-- 1 linc linc   708 Mar  6 10:00 ./linux/tmux/tmux.org
+   #+end_example
+
+   思路: 1) awk 把文件名打印到第一列 2) sort 排序 3) cut再将第一列删除

@@ -344,6 +344,7 @@
       上面的 ~!~ 表示取反操作
 
 *** sed
+
     好像没什么好说的，vi中自带的就是sed操作
 
 **** 替换行首和行尾空格
@@ -353,8 +354,20 @@
      - *vim删除行尾空格和tab* =:%s/\s\+$//g=
      - *只删除行尾空格，不删除tab* =:%s/ *$//g=
 
-*** TODO 合并与分割
-
+*** TODO join
+*** cut
+    [[https://www.gnu.org/software/coreutils/manual/html_node/cut-invocation.html#cut-invocation][参考材料]]
+    
+    - ~-d~ 指定分割符
+    - ~-fn~ 只保留第n个field
+    - ~-fn-~ 保留从n开始及以后的所有field
+    删除最后一个field:
+    #+begin_example
+      linc@pop-os:~/books$ echo "abc.def.hij" | rev | cut -d '.' -f2- | rev
+      abc.def
+    #+end_example
+*** rev
+    reverse输入的字符
 *** sort
     
     *sort里面起始域号是1，不是0*
