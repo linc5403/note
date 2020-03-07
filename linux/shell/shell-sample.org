@@ -21,4 +21,135 @@
    #+begin_src sh
      ps auxf | sort -nr -k 3 | head -5 | awk '{$1 = ""; $2 = ""; for (i=4; i < 12; i++) $i=""; print $0}'
    #+end_src
+** 删除特殊文件名的文件 - ~rm --~
+   #+begin_src sh
+     rm -- -df
+   #+end_src
+   #+begin_example
+     linc@pop-os:~$ ls
+     agenda       c           docs          go        Public     Videos
+     banyuan      config      Documents     HomeWork  python
+     banyuan-bak  c-projects  Downloads     Music     software
+     blog         Desktop     ds            note      temp
+     books        -df         emacs_config  Pictures  Templates
+     linc@pop-os:~$ rm -df
+     linc@pop-os:~$ ls
+     agenda       c           docs          go        Public     Videos
+     banyuan      config      Documents     HomeWork  python
+     banyuan-bak  c-projects  Downloads     Music     software
+     blog         Desktop     ds            note      temp
+     books        -df         emacs_config  Pictures  Templates
+     linc@pop-os:~$ rm -- -df
+     linc@pop-os:~$ ls
+     agenda       books       Desktop    ds            Music     python     Videos
+     banyuan      c           docs       emacs_config  note      software
+     banyuan-bak  config      Documents  go            Pictures  temp
+     blog         c-projects  Downloads  HomeWork      Public    Templates
+   #+end_example
 
+   [[*shell命令][返回顶部]]
+
+** 设置系统编辑器
+   #+begin_src sh
+     sudo update-alternatives --config editor
+   #+end_src
+** netstat
+   #+begin_src sh
+     netstat -lntp
+   #+end_src
+   #+begin_example
+     $sudo netstat -tulpen | grep 1081
+     tcp        0      0 0.0.0.0:1081            0.0.0.0:*               LISTEN		13         41905719   68152/polipo
+   #+end_example
+   | parameter | meaning                        |
+   |-----------+--------------------------------|
+   | a         | all                            |
+   | t         | tcp                            |
+   | u         | udp                            |
+   | n         | port number                    |
+   | l         | listening                      |
+   | p         | program                        |
+   | e         | extend (additional infomation) |
+   
+   [[*shell命令][返回顶部]]
+** 后台执行(nohup)
+   #+begin_example
+     nohup cmd  > /dev/null &
+   #+end_example
+** 删除所有指定目录
+   #+begin_src sh
+     find /test/subtest -type d -name '.svn' -exec rm -rf {} \;
+   #+end_src
+** cp 大量文件  
+   #+begin_src sh
+     sudo find source/ -type f -name "*.jpg" -exec cp {} target \;
+   #+end_src
+   - linux
+     #+begin_src sh
+       find ./ -type f -exec cp {} ../2 \;
+     #+end_src
+** sort
+   #+begin_src 
+     sort -k14,14n -k15,15n  
+   #+end_src
+** awk
+   #+begin_src sh
+     docker ps | grep 'zhiying-web' | awk {'print $1'}  
+     kill -9 ` ps -e | grep salt | awk 'NR==1 {print $1}' `  
+   #+end_src
+** ln -s
+   ~ln -s~ 已经有的 快捷方式
+   #+begin_example
+     ln -s source shortcut
+   #+end_example
+
+** rsync
+   #+begin_example
+     sync -aP --rsh=ssh  hunch@40.73.33.137:/data/temp/mp4/finished ./new
+     rsync -aP --rsh=ssh --include="*.mp4" --exlude=* hunch@40.73.33.137:/data/temp/mp4/finished ~/temp/
+     sshpass -p remotepasswd rsync -avz --delete local_dir -e ssh remoteuser@192.168.5.38:remote_dir  
+     rsync -aP --rsh=ssh --include="*.mp4" --exclude="*.part" test3:/data/temp/ ./finished
+   #+end_example
+
+   - ~-S, --sparse~ 对稀疏文件进行特殊处
+   - ~-P~ 等同于 ~--partial --progress~ 显示备份过程
+   - ~-v, --verbose~ 详细模式输出
+   - ~--rsh=COMMAND~ 指定使用rsh、ssh方式进行数据同步
+   - ~-x, --one-file-system~ 不要跨越文件系统边界
+   - ~-z~ 传输时压缩
+   [[*shell命令][返回顶部]]
+
+** 删除指定日期之前的文件
+   #+begin_example
+     find Asynctask/ -mtime +92 -type f -exec sudo rm -f {} \;
+   #+end_example```
+   - 文件的Access time，atime 是在读取文件或者执行文件时更改的。
+   - 文件的 Modified time，mtime 是在写入文件时随文件内容的更改而更改的。
+   - 文件的 Create time，ctime 是在写入文件、更改所有者、权限或链接设置时随 Inode 的内容更改而更改的。
+
+** 删除grep的结果
+   #+begin_example
+     git status | grep aivideo | xargs rm -rf
+   #+end_example
+
+** macos下xargs参数
+   #+begin_example
+     ls -l | grep -v "^d" | grep docker | awk '{print $NF}' | xargs -I {} mv {} docker
+   #+end_example
+** linux下xargs带参数
+   #+begin_example
+     find ./ -maxdepth 1 -type f | grep -v "^\./\." | xargs -i mv {} test
+   #+end_example
+
+** 查看dns
+   #+begin_example
+     cat /etc/resolv.conf 
+   #+end_example
+
+   [[*shell命令][返回顶部]]
+
+** 统计目录下的文件个数
+   #+begin_example
+     ls -l |grep "^-"|wc -l
+     ls -lR|grep "^-"|wc -l
+   #+end_example
