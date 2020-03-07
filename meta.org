@@ -1,3 +1,4 @@
+#+LATEX_HEADER: \usepackage {ctex}
 * TODO chromecast投屏
   [[https://vitux.com/how-to-cast-video-from-ubuntu-to-chromecast/][linux 桌面投屏到投影仪]]
 
@@ -8,4 +9,8 @@
 
 [[https://gitlab.com/wavexx/screenkey][screenkey]]
 
+* gnome-shell memory leak
+  1) Press Alt + F2
+  2) Type the letter ‘r’
+  3) Hit Enter/Return
 
