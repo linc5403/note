@@ -1,12 +1,16 @@
+#+LATEX_HEADER \usepackage {ctex}
+
 * Shell
 
 ** Important commands
 
-| command   | meaning                      |
-|-----------+------------------------------|
-| type -a   | 查看命令在系统中的可用情况   |
+   | command | meaning                    |
+   |---------+----------------------------|
+   | type -a | 查看命令在系统中的可用情况 |
 
 ** shell cmd
+
+*** [[https://www.gnu.org/software/coreutils/manual/html_node/index.html][参考材料]]
 
 *** 文件类型
 
@@ -77,514 +81,650 @@
       xargs -n1 -i cp '{}' dest/folder
     #+end_src
     
-    - ~find ./ -print0 |xargs -0 file~
+    - 文件名包含空格
+      #+begin_src sh
+	find ./ -print0 |xargs -0 cp '{}' /data
+      #+end_src
 
-      文件名中包含空格的情况下使用
+      文件名中包含空格的情况下使用， ~-print0~ 和 ~-0~ 配合使用，能够将带空格的文件找出来。
 
-- xargs cp\\
-  =find ./ -name "*.mp4" | xargs -i cp '{}' /data=
+    - ~xargs cp~
+
+      #+begin_src sh
+	find ./ -name "*.mp4" | xargs -i cp '{}' /data
+      #+end_src
 
 *** echo
-
-#+BEGIN_EXAMPLE
-    \c 不换行。
-    \f 进纸。
-    \t 跳格。
-    \n 换行。
-#+END_EXAMPLE
-
-- -e\\
-  > 转义\\
-  > => echo -e "\"abc\" `tty`" > "abc" /dev/pts/11 >=
+    #+BEGIN_EXAMPLE
+      \c 不换行。
+      \f 进纸。
+      \t 跳格。
+      \n 换行。
+    #+END_EXAMPLE
+    - ~-e~
+      转义
+      #+begin_src sh
+	echo -e "\"abc\" `tty`" > "abc" /dev/pts/11
+      #+end_src
 
 *** read
+    - *read -p* 
 
-- *read -p* > 给出提示符，不显示换行\\
-  > =sh > read -p "input your name: " a > echo $a >= >
-  =>  ✘ (python3.7)  ~/bin  t.sh > input your name: abc > abc >=
+      给出提示符，不显示换行
+      #+begin_example
+	read -p "input your name: " a
+	echo $a
+	 ✘ (python3.7)  ~/bin  t.sh
+	input your name: abc
+	abc
+      #+end_example
 
-- *标准输入赋值到变量*
+    - *标准输入赋值到变量*
+      #+begin_example
+	hunch@linchuan-test3:~/test/shell$ read name
+	sdfjlkavsj bn pihef awoenkjn fsdad
+	hunch@linchuan-test3:~/test/shell$ echo $name
+	sdfjlkavsj bn pihef awoenkjn fsdad
+      #+end_example
+    - *输入到数量多余变量数量，最后一个变量会收集剩余所有到值*
+      #+begin_example
+	hunch@linchuan-test3:~/test/shell$ read name1 name2 nameall
+	aa bb cc dd ee ff gg hh
+	hunch@linchuan-test3:~/test/shell$ echo $name1
+	aa
+	hunch@linchuan-test3:~/test/shell$ echo $name2
+	bb
+	hunch@linchuan-test3:~/test/shell$ echo $nameall
+	cc dd ee ff gg hh
+      #+end_example
 
-#+BEGIN_QUOTE
-  #+BEGIN_EXAMPLE
-      hunch@linchuan-test3:~/test/shell$ read name
-      sdfjlkavsj bn pihef awoenkjn fsdad
-      hunch@linchuan-test3:~/test/shell$ echo $name
-      sdfjlkavsj bn pihef awoenkjn fsdad
-  #+END_EXAMPLE
-#+END_QUOTE
+    - *为变量赋缺省值*
+      #+begin_src sh
+	read a
+	case ${a:=1} in
+	    1|2) echo "you choose ${a}"
+		;;
+	    ,*) echo "must in [ 1 | 2 ]"
+		;;
+	esac
+      #+end_src
 
-- *输入到数量多余变量数量，最后一个变量会收集剩余所有到值*
+    - *读取文本内容*
+      *-r表示不转义解释，用raw的内容*
+      
+      简单的说，使用 ~-r~ 会解析 ~\~ 转义，但是当 ~\~ 在行末的时候不会将下一行连接到一起
 
-#+BEGIN_QUOTE
-  #+BEGIN_EXAMPLE
-      hunch@linchuan-test3:~/test/shell$ read name1 name2 nameall
-      aa bb cc dd ee ff gg hh
-      hunch@linchuan-test3:~/test/shell$ echo $name1
-      aa
-      hunch@linchuan-test3:~/test/shell$ echo $name2
-      bb
-      hunch@linchuan-test3:~/test/shell$ echo $nameall
-      cc dd ee ff gg hh
-  #+END_EXAMPLE
-#+END_QUOTE
+      不使用 ~-r~ 则不会解析 ~\~ 转义，当 ~\~ 在行末的时候会将下一行连接到一起
+      
+      #+begin_example
+	$ more 123
+	asdf\asdf\asdf
+	asdf\nasdf\nasdf\n
+	aaaaaaaaaa\
+	cccccc
+	$ while read line; do echo $line; done < $a
+	asdfasdfasdf
+	asdfnasdfnasdfn
+	aaaaaaaaaacccccc
+	$ while read -r line; do echo $line; done < $a
+	asdfsdfsdf
+	asdf
+	asdf
+	asdf
 
-- *为变量赋缺省值*\\
+	aaaaaaaaaa\
+	cccccc
+      #+end_example
 
-#+BEGIN_SRC sh
-    read a
-    case ${a:=1} in
-        1|2) echo "you choose ${a}"
-            ;;
-        *) echo "must in [ 1 | 2 ]"
-            ;;
-    esac
-#+END_SRC
-
-- *读取文本内容*\\
-  */-r表示不转义解释，用raw的内容/*\\
-  a="abc.txt"\\
-
-#+BEGIN_SRC sh
-    while read -r line; do echo $line; done < $a
-#+END_SRC
+      #+begin_src sh
+	a="abc.txt"
+	while read -r line; do echo $line; done < $a
+      #+end_src
 
 - *读取命令结果*\\
-
-#+BEGIN_SRC sh
+  #+begin_src sh
     while read -r line; do echo $line; done <<<$(ps aux | grep hunch)
     while read -r line; do echo $line; done < <(ps aux | grep hunch)
-#+END_SRC
-
-
-
+  #+end_src
 *** cat
+    - v
+      显示控制字符
+      #+begin_example
+	 $ more 123
+	jkkdsf
+	 $ cat -v 123
+	jkkdsf^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F^F
+      #+END_EXAMPLE
 
-- -v\\
-  显示控制字符\\
-- 编辑文件 ctrl-D结束 > >
-  => hunch@linchuan-test3:~/test/shell$ cat > myfile > asdf > 1234 > hunch@linchuan-test3:~/test/shell$ more myfile > asdf > 1234 >=
+    - 编辑文件 ctrl-D结束
+      #+begin_example
+	hunch@linchuan-test3:~/test/shell$ cat > myfile
+	asdf
+	1234
+	hunch@linchuan-test3:~/test/shell$ more myfile
+	asdf
+	1234
+      #+end_example
 
 *** tee
-
-输出到标准输出，同时同步一份输出到文件
-
-#+BEGIN_EXAMPLE
-    hunch@linchuan-test3:~/test/shell$ ls | tee out.file
-    121.txt
-    122.txt
-    123.txt
-    12.a.txt
-    12a.txt
-    myfile
-    hunch@linchuan-test3:~/test/shell$ ls
-    121.txt  122.txt  123.txt  12.a.txt  12a.txt  myfile  out.file
-    hunch@linchuan-test3:~/test/shell$ more out.file
-    121.txt
-    122.txt
-    123.txt
-    12.a.txt
-    12a.txt
-    myfile
-#+END_EXAMPLE
-
-- vim 编辑root文件\\
-  =:w !sudo tee %=
+    输出到标准输出，同时同步一份输出到文件
+    #+begin_example
+      hunch@linchuan-test3:~/test/shell$ ls | tee out.file
+      121.txt
+      122.txt
+      123.txt
+      12.a.txt
+      12a.txt
+      myfile
+      hunch@linchuan-test3:~/test/shell$ ls
+      121.txt  122.txt  123.txt  12.a.txt  12a.txt  myfile  out.file
+      hunch@linchuan-test3:~/test/shell$ more out.file
+      121.txt
+      122.txt
+      123.txt
+      12.a.txt
+      12a.txt
+      myfile
+    #+end_example
+    
+    - vim 编辑root权限的文件
+      #+begin_example
+	:w !sudo tee %
+      #+end_example
 
 *** 标准输入，标准输出和错误输出
-
-| command filename 2>&1   | 标准输出和错误输出重定向到一个文件   |
-|-------------------------+--------------------------------------|
-| command 2 > filename    | 错误输出重定向到一个文件             |
+    
+    | command > filename 2>&1 | 标准输出和错误输出重定向到一个文件 |
+    |-------------------------+------------------------------------|
+    | command 2 > filename    | 错误输出重定向到一个文件           |
+    
+    - ~>~ 等价于 ~1>~
+    - ~2>&1~ 的含义是将错误输出重定向到标准输出
 
 *** grep
 
-- 通配符 *\\
-  *表示任意多个之前的字符*\\
-  *查找vim*vim*\\
-  >
-  => grep "vim.*vim" find_out > -rw-r--r--  1 linchuan  staff  9929 May 25 20:35 .//vim/vim.md > -rw-r--r--  1 linchuan  staff  655 May 25 20:35 .//vim/vim-build-from-source-mac.md > -rw-r--r--  1 linchuan  staff  2811 Oct 30  2018 .//vim/vim2.md > -rw-r--r--  1 linchuan  staff  5373 May 25 20:35 .//vim/vim-build-from-source-debian.md > -rw-r--r--  1 linchuan  staff  3838 May 25 20:35 .//vim/zsh-vim-mode.md >=
+- 通配符
+  - ~*~
 
-- 通配符 .\\
-  *表示任意1个字符*
+    匹配之前字符0次任意多次
+  - ~.~
+    表示任意1个字符
+    
+  ~*~ 和 ~.~ 通常会联合使用
 
-- ^ 匹配行首\\
+  #+begin_example
+    grep "dev-env.*conf" find_out
+    ./docker-compose-samples/dev-env/proxy/polipo.conf
+    ./docker-compose-samples/dev-env/proxy/ssh/config
+  #+end_example
+  这个命令的作用是查找 ~dev-env~ 后面跟着 ~conf~ 的行
 
-#+BEGIN_EXAMPLE
+- ~^~ 匹配行首
+  #+begin_example
     grep "^vim" filename
     vim.md
     vim-build-from-source-mac.md
     vim2.md
     vim-build-from-source-debian.md
-#+END_EXAMPLE
+  #+end_example
 
-- $ 匹配行尾\\
-
-#+BEGIN_EXAMPLE
+- ~$~ 匹配行尾
+  #+begin_example
     grep "sample$" filename
     commit-msg.sample
     pre-rebase.sample
     pre-commit.sample
     applypatch-msg.sample
     fsmonitor-watchman.sample
-#+END_EXAMPLE
+  #+end_example
 
-- \{1, 3\} 匹配出现次数\\
-  *\{1, \} 一次以上*\\
-  *\{1\} 刚好一次*\\
-
-#+BEGIN_EXAMPLE
+- ~\{1, 3\}~ 匹配出现次数
+  - ~\{1, \}~ 一次以上
+  - ~\{1\}~ 刚好一次
+ 
+  #+begin_example
     note  grep "[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" ~/.ssh/config
     HOST 121.196.213.142
     Host 192.168.1.66
     Host 40.125.172.62
     Host 139.219.10.159
-#+END_EXAMPLE
+  #+end_example    
 
 *** awk
+    - ~BEGIN END~
+      #+begin_example
+	awk 'BEGIN {print "FILENAME\n--------------------"} {print $NF} END {print "end of report"}' find_out
+      #+end_example
+      #+begin_example
+	awk -F/ 'BEGIN {print ARGV[1] "\n----------"} {if ($NF ~/\.org$/)print NR " " $NF} END {print "---------------\nend of report"}' find_out
+      #+end_example
 
-- BEGIN END
+    - ~FILENAME~
 
-=awk 'BEGIN {print "FILENAME\n--------------------"} {print $NF} END {print "end of report"}' find_out=
+      当前文件名
+      
+      *warning* FILENAME not working in BEGIN rule. 需要用上面的方式在BEGIN中打印文件名。
 
-- FILENAME\\
-  *当前文件名*
+      [[https://www.cyberciti.biz/faq/how-to-print-filename-with-awk-on-linux-unix/][print filename]]
 
-- NR *number of record, 行号*
+    - ~NR~ 
 
-- NF *number of field, 域号*\\
-  '{print $NF}' 用来打印最后一列
+      number of record, 行号
 
-- -F *定义分割符号*\\
-  = master  ~/iCloud/note  awk '{print $NF}' find_out | awk -F/ '{print $NF}' | grep "md$"=
+    - ~NF~
 
-- 匹配\\
-  *_{/re/* >
-  => awk '{if ($NF~/md$/) print $0}' find_out > awk '{if ($0 ~/\.md$/) print $0}' find_out > awk '{if ($6 !~/May/) print $0}' find_out > awk '{if ($6 ~/May/) print $0}' find_out >=
-  > *注意!与}之间没有空格*
+      number of field, 域号
+      
+      - 打印最后一列
+
+	#+begin_src sh
+	  awk '{print $NF}'
+	#+end_src
+
+      - 打印倒数第二列
+	#+begin_src sh
+	  awk '{print $(NF-1)}' 
+	#+end_src
+
+    - ~-F~ *定义分割符号*
+      #+begin_example
+	awk -F/ '{print $NF}' find_out | grep "md$"
+      #+end_example
+
+    - 正则匹配
+
+      ~/re/
+      #+begin_example
+	awk '{if ($NF ~/md$/) print $0}' find_out
+	awk '{if ($0 ~/\.md$/) print $0}' find_out
+	awk '{if ($6 !~/May/) print $0}' find_out
+	awk '{if ($6 ~/May/) print $0}' find_out
+	awk -F/ '{if ($NF ~/org$/) print $2 "/" $3}' find_out
+      #+end_example
+      上面的 ~!~ 表示取反操作
 
 *** sed
-
-好像没什么好说的，vi中自带的就是sed操作
+    好像没什么好说的，vi中自带的就是sed操作
 
 **** 替换行首和行尾空格
+     - *行首* ~sed 's/^[ \t]*//g'~
+     - *行尾* ~sed 's/[ \t]*$//g'~
+     - *vim替换tab* ~%retab~:
+     - *vim删除行尾空格和tab* =:%s/\s\+$//g=
+     - *只删除行尾空格，不删除tab* =:%s/ *$//g=
 
-- *行首* =sed 's/^[ \t]*//g'=
-- *行尾* =sed 's/[ \t]*$//g'=
+*** TODO 合并与分割
 
-- *vim替换tab* =%retab=
+*** sort
+    
+    *sort里面起始域号是1，不是0*
+    
+    - ~sort -u~
+    
+      删除所有重复行
 
-- *vim删除行尾空格和tab* =:%s/\s\+$//g=
+    - ~sort -k 3~
+    
+      按照第三列排序
 
-- *只删除行尾空格，不删除tab* =:%s/ *$//g=
+    - ~sort -kr 3~
 
-*** 合并与分割
+      第三列倒序
 
-**** sort
+    - ~sort -nr -k 4~
 
-#+BEGIN_QUOTE
+      第四列数字倒序
 
-  - sort -u\\
-    *删除所有重复行*
+    - ~sort -M -k 4~
+    
+      第四列月份排序
 
-  - sort -k 3\\
-  - sort -kr 3\\
-  - sort -nr +4\\
-  - sort -M 4
+    - sort的示例： 
+      
+      1. 第2列数字顺序，第5列数字顺序，第6列月份倒序
+	 #+begin_example
+	   ls -la | sort -k 2n -k 5n  -k 6Mr
+	   -rw-r--r--  1 linc linc    19 Mar  4 08:36 note.org~
+	   -rw-r--r--  1 linc linc    79 Mar  6 11:26 .gitignore
+	   -rw-r--r--  1 linc linc   178 Mar  6 18:07 123
+	   -rw-r--r--  1 linc linc   342 Mar  6 09:13 note.org
+	   -rw-r--r--  1 linc linc  6749 Feb 28 17:27 my_note.ipynb
+	   -rw-r--r--  1 linc linc 10113 Mar  6 18:20 find_out
+	   drwxr-xr-x  2 linc linc  4096 Mar  6 09:38 latex
+	   drwxr-xr-x  2 linc linc  4096 Mar  6 11:17 cloud
+	   drwxr-xr-x  2 linc linc  4096 Mar  6 11:30 idea
+	   drwxr-xr-x  2 linc linc  4096 Mar  6 15:55 python
+	   drwxr-xr-x  2 linc linc  4096 Mar  6 16:58 temp
+	   drwxr-xr-x  2 linc linc  4096 Feb 28 17:27 ffmpeg
+	   drwxr-xr-x  2 linc linc  4096 Feb 28 17:27 mac
+	   drwxr-xr-x  2 linc linc  4096 Feb 28 17:27 meta
+	   drwxr-xr-x  2 linc linc  4096 Feb 28 17:27 vim
+	   drwxr-xr-x  3 linc linc  4096 Feb 28 17:27 books
+	   drwxr-xr-x  6 linc linc  4096 Feb 28 17:27 docker-compose-samples
+	   drwxr-xr-x  8 linc linc  4096 Mar  7 10:29 .git
+	   drwxr-xr-x 11 linc linc  4096 Mar  6 09:57 linux
+	   drwxr-xr-x 15 linc linc  4096 Mar  7 10:16 .
+	   drwxr-xr-x 60 linc linc  4096 Mar  7 11:26 ..
+	   total 96
+	 #+end_example
+      2. 日期的排序
+	 #+begin_example
+	   4.150.156.3 - - [01/Apr/2004:06:31:51 +0000] message 1
+	   211.24.3.231 - - [24/Apr/2004:20:17:39 +0000] message 2
+	 #+end_example
 
-#+END_QUOTE
+	 对上面的文件先按照时间戳排序，再按照IP地址排序
+	 #+begin_example
+	   sort -s -t ' ' -k 4.9n -k 4.5M -k 4.2n -k 4.14,4.21 file*.log |
+	   sort -s -t '.' -k 1,1n -k 2,2n -k 3,3n -k 4,4n
+	 #+end_example
+       
+	 需要调用两次sort进行排序，因为IP地址是以 ~.~ 进行分割。
+       
+	 思路：
+       
+	 1) 第一个sort按照年-月-日-时间的顺序排序
+	 2) 第二个sort使用 ~-t '.'~ 将 ~.~ 用作分割符分离IP地址
+    
+    - [[https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html][参考资料]]
 
 ** shell变量和参数
 
 *** 变量设置时的不同模式
 
-*/注意：:=不能单独使用，需要在其他语句中使用，如echo，if等/*
+    */注意：:=不能单独使用，需要在其他语句中使用，如echo，if等/*
 
-| 语法                   | 含义                                                |
-|------------------------+-----------------------------------------------------|
-| Variable-name=value    | 设置实际值到variable-name                           |
-| Variable-name+value    | 如果设置了variable-name，则重设其值                 |
-| Variable-name:?value   | 如果未设置variable-name，显示未定义用户错误信息     |
-| Variable-name?value    | 如果未设置variable-name，显示系统错误信息           |
-| Variable-name:=value   | 如果未设置variable-name，设置其值                   |
-| Variable-name:-value   | 同上，但是取值并不设置到variable-name，可以被替换   |
+    | 语法                 | 含义                                              |
+    |----------------------+---------------------------------------------------|
+    | Variable-name=value  | 设置实际值到variable-name                         |
+    | Variable-name+value  | 如果设置了variable-name，则重设其值               |
+    | Variable-name:?value | 如果未设置variable-name，显示未定义用户错误信息   |
+    | Variable-name?value  | 如果未设置variable-name，显示系统错误信息         |
+    | Variable-name:=value | 如果未设置variable-name，设置其值                 |
+    | Variable-name:-value | 同上，但是取值并不设置到variable-name，可以被替换 |
 
 *** 参数的引用
-
-| 参数   | 含义                                             |
-|--------+--------------------------------------------------|
-| $#     | 参数个数                                         |
-| $0     | 脚本名称                                         |
-| $1     | 第一个参数                                       |
-| $?     | 最后一条命令的退出状态, 0 表示正常，其他是异常   |
+    | 参数 | 含义                                           |
+    |------+------------------------------------------------|
+    | $#   | 参数个数                                       |
+    | $0   | 脚本名称                                       |
+    | $1   | 第一个参数                                     |
+    | $?   | 最后一条命令的退出状态, 0 表示正常，其他是异常 |
 
 *** 各种引号
-
-- *双引号*\\
-  > 除 $, `, \外的其他符号\\
-- *单引号*\\
-  > 屏蔽所有的符号\\
-- *反引号*\\
-  > 反引号用于设置系统命令的输出到变量\\
-- *反斜线*\\
-  > 如果下一个字符有特殊含义，反斜线防止shell误解其含义
+    - *双引号*
+      除 ~$~, ~`~, ~\~ 外的其他符号
+    - *单引号*
+      屏蔽所有的符号
+    - *反引号*
+      反引号用于设置系统命令的输出到变量
+    - *反斜线*
+      如果下一个字符有特殊含义，反斜线防止shell误解其含义
 
 ** 条件测试
-
+   
 *** 文件状态测试
 
-#+BEGIN_QUOTE
-  | symbol   | mean            |
-  |----------+-----------------|
-  | -f       | 普通文件        |
-  | -d       | 目录            |
-  | -r       | 可读            |
-  | -x       | 可执行          |
-  | -s       | 文件长度大于0   |
-#+END_QUOTE
+    | symbol | mean          |
+    |--------+---------------|
+    | -f     | 普通文件      |
+    | -d     | 目录          |
+    | -r     | 可读          |
+    | -x     | 可执行        |
+    | -s     | 文件长度大于0 |
 
 *** 组合(仅用于文件状态测试)
+    - *-a逻辑与*
+    - *-o逻辑或*
 
-#+BEGIN_QUOTE
+    示例：
+    #+begin_example
+      [ -f abc.sh -a -x abc.sh ]
+    #+end_example
 
-  - *-a逻辑与*\\
-  - *-o逻辑或*
-#+END_QUOTE
-
-=[ -f abc.sh -a -x abc.sh ]=\\
-abc.sh存在且可执行, *注意括号两端的空格*
+    abc.sh存在且可执行, *注意括号两端的空格*
 
 *** 字符串测试
-
-#+BEGIN_QUOTE
-  #+BEGIN_EXAMPLE
+    #+begin_example
       [ string operator string ]
       [ operator string ]
-  #+END_EXAMPLE
-
-  | operator   | mean               |
-  |------------+--------------------|
-  | =          | 两个字符串相等。   |
-  | !=         | 两个字符串不等。   |
-  | -z         | 空串。             |
-  | -n         | 非空串。           |
-#+END_QUOTE
+    #+end_example
+    | operator | mean             |
+    |----------+------------------|
+    | =        | 两个字符串相等。 |
+    | !=       | 两个字符串不等。 |
+    | -z       | 空串。           |
+    | -n       | 非空串。         |
 
 *** 数值测试
+    #+begin_example
+      [ "number" numeric_operator "number" ]
+    #+end_example
 
-#+BEGIN_QUOTE
-  =[ "number" numeric_operator "number" ]=
-
-  | operator   | mean                         |
-  |------------+------------------------------|
-  | -eq        | 数值相等。                   |
-  | -ne        | 数值不相等。                 |
-  | -gt        | 第一个数大于第二个数。       |
-  | -lt        | 第一个数小于第二个数。       |
-  | -le        | 第一个数小于等于第二个数。   |
-  | -ge        | 第一个数大于等于第二个数。   |
-#+END_QUOTE
+    | operator | mean                       |
+    |----------+----------------------------|
+    | -eq      | 数值相等。                 |
+    | -ne      | 数值不相等。               |
+    | -gt      | 第一个数大于第二个数。     |
+    | -lt      | 第一个数小于第二个数。     |
+    | -le      | 第一个数小于等于第二个数。 |
+    | -ge      | 第一个数大于等于第二个数。 |
 
 *** expr
-
-用于数值计算\\
-=expr argument operator argument=
-
-#+BEGIN_EXAMPLE
-    (python3.7)  ~/bin  expr 3 + 4
+    用于数值计算
+    #+begin_example
+      expr argument operator argument
+    #+end_example
+    #+begin_example
+    $ expr 3 + 4
     7
-#+END_EXAMPLE
+    #+end_example
 
 *** << HERE
 
-表示一段输入\\
->
-=sh > $ while read -r line; do echo $line; done << eof > asdf > zxcv > ujmasdf > asdf > eof > asdf > zxcv > ujmasdf > asdf >=
+    表示一段输入
+    #+begin_example
+      linc@pop-os:~/note$ while read -r line; do echo $line; done << eof
+      > asdf
+      > bbb
+      > ccc
+      > eof
+      asdf
+      bbb
+      ccc
+    #+end_example
 
 **** read from var
-
-a="abc def ghi"
-
-cat <<< $a
-
+     #+begin_example
+       a="abc def ghi"
+       cat <<< $a
+     #+end_example
+     
 **** read from file
-
-a="abc.txt"\\
-cat < $a
+     #+begin_example
+       a="abc.txt"\\
+       cat < $a
+     #+end_example
 
 **** read from command output
-
-cat < <(command)\\
-cat <<< $(command)
+     #+begin_example
+       cat < <(command)\\
+       cat <<< $(command)
+     #+end_example
 
 **** read from stand input
-
-#+BEGIN_SRC sh
-    $ grep "^a" <&0
-    xxx
-    abc
-    abc
-    jjj
-#+END_SRC
+     #+BEGIN_SRC sh
+       $ grep "^a" <&0
+       xxx
+       abc
+       abc
+       jjj
+     #+END_SRC
+     #+begin_example
+       linc@pop-os:~/note$ grep "^a" <&0
+       ccc
+       ddd
+       abc
+       abc
+       aaaaaaaaaaaaaa
+       aaaaaaaaaaaaaa
+     #+end_example
 
 **** write file with multi-line
+     #+BEGIN_SRC sh
+       cat > abc.txt <<eof
+       abc
+       $a
+       end
+       eof
+     #+END_SRC
 
-#+BEGIN_SRC sh
-    cat > abc.txt <<eof
-    abc
-    $a
-    end
-    eof
-#+END_SRC
-
-*** command substitution
-
+*** TODO command substitution
 ** 控制流结构
 
 *** if then else
+    
+    #+BEGIN_SRC sh
+      if [ $# -lt "1" ]; then
+	  echo "need at lest one param"
+      else
+	  echo "the params are $@"
+      fi
+    #+END_SRC
 
-#+BEGIN_SRC sh
-    if [ $# -lt "1" ]; then
-        echo "need at lest one param"
-    else
-        echo "the params are $@"
-    fi
-#+END_SRC
+    -变异
 
-- 变异\\
-
-#+BEGIN_SRC sh
-    [ -f abc.txt ] && a="True" || a="False"
-#+END_SRC
+    #+BEGIN_SRC sh
+      [ -f abc.txt ] && a="True" || a="False"
+    #+END_SRC
 
 *** case
-
-#+BEGIN_SRC sh
-    if ! [ $# -eq "1" ]; then
-        echo "need just 1 param"
-    else
-        case $1 in
-            1) echo "you input 1"
-                ;;
-            2) echo "you input 2"
-                ;;
-            *) echo "must input 1 or 2" >&2
-                exit 1
-                ;;
-        esac
-    fi
-#+END_SRC
+    
+    #+BEGIN_SRC sh
+      if ! [ $# -eq "1" ]; then
+	  echo "need just 1 param"
+      else
+	  case $1 in
+	      1) echo "you input 1"
+		  ;;
+	      2) echo "you input 2"
+		  ;;
+	      ,*) echo "must input 1 or 2" >&2
+		  exit 1
+		  ;;
+	  esac
+      fi
+    #+END_SRC
 
 *** for
-
-#+BEGIN_SRC sh
-    for filex in ./*; do
-        echo $filex
-    done
-#+END_SRC
+    
+    #+BEGIN_SRC sh
+      for filex in ./*; do
+	  echo $filex
+      done
+    #+END_SRC
 
 *** until
 
-#+BEGIN_SRC sh
-    read a
-    until [ $a -eq 100 ]; do
-        read a
-    done
-#+END_SRC
+    #+BEGIN_SRC sh
+      read a
+      until [ $a -eq 100 ]; do
+	  read a
+      done
+    #+END_SRC
 
 *** while
     
-- *读入文件*\\
-  >
-  =sh > # 从第一个参数的文件读入每一行 > while read line; do >     echo $line > done < $1 >=
+    - *读入文件*
+      #+begin_src sh
+	# 从第一个参数的文件读入每一行
+	while read line; do
+	    echo $line
+	done < $1
+      #+end_src
 
 *** break
-
-#+BEGIN_QUOTE
-  #+BEGIN_SRC sh
+    
+    #+BEGIN_SRC sh
       # break的使用
       while :; do
-          echo "input number in [1..5]"
-          read input
-          case $input in
-              1|2|3|4|5) echo "you are right"
-                  ;;
-              *) echo "you are wrong"
-                  break
-                  ;;
-          esac
+	  echo "input number in [1..5]"
+	  read input
+	  case $input in
+	      1|2|3|4|5) echo "you are right"
+		  ;;
+	      ,*) echo "you are wrong"
+		  break
+		  ;;
+	  esac
       done
-  #+END_SRC
-#+END_QUOTE
+    #+END_SRC
 
 *** continue
 
-#+BEGIN_QUOTE
-  #+BEGIN_SRC sh
+    #+BEGIN_SRC sh
       # continue的使用
       echo "input number in [1..5]"
       while :; do
-          read input
-          if [ $input -le 5 -a $input -ge 1 ]; then
-              echo "you are right"
-              continue
-          fi
-          exit 0
+	  read input
+	  if [ $input -le 5 -a $input -ge 1 ]; then
+	      echo "you are right"
+	      continue
+	  fi
+	  exit 0
       done
-  #+END_SRC
-#+END_QUOTE
+    #+END_SRC
 
 ** shell函数
+   
+   #+BEGIN_SRC sh
+     function findit() {
+	 if [ $# -lt 1 ]; then
+	     echo "usage: findit file"
+	     return 1
+	 fi
+	 find / -name $1 -print
+     }
+   #+END_SRC
 
-#+BEGIN_SRC sh
-    function findit() {
-        if [ $# -lt 1 ]; then
-            echo "usage: findit file"
-            return 1
-        fi
-        find / -name $1 -print
-    }
-#+END_SRC
-
-#+BEGIN_EXAMPLE
-     (python3.7)  ~/bin  . functions.main
-     (python3.7)  ~/bin  findit
-    usage: findit file
-#+END_EXAMPLE
+   #+BEGIN_EXAMPLE
+	(python3.7)  ~/bin  . functions.main
+	(python3.7)  ~/bin  findit
+       usage: findit file
+   #+END_EXAMPLE
 
 *** load shell文件
+    *使用. file-path来加载shell文件，之后可以直接使用其中定义的函数*
 
-*使用. file-path来加载shell文件，之后可以直接使用其中定义的函数*
+    #+BEGIN_SRC sh
+      bash-3.2$ find
+      find           find2perl      find2perl5.18  findhyph       findrule       findrule5.18
+      bash-3.2$ ls
+      __pycache__                     functions.main                  phantomjs-2.1.1-macosx.zip
+      compose.py                      img_view.py                     rec.py
+      format_boost.py                 index.sh                        sox
+      front_rsa                       phantomjs                       t.sh
+      front_rsa.pub                   phantomjs-2.1.1-macosx          test.sh
+      bash-3.2$ . functions.main
+      bash-3.2$ find
+      find           find2perl5.18  findit         findrule5.18
+      find2perl      findhyph       findrule
+      bash-3.2$ findit
+      usage: findit file
+      bash-3.2$ more functions.main
+      #!/usr/bin/env sh
 
-#+BEGIN_SRC sh
-    bash-3.2$ find
-    find           find2perl      find2perl5.18  findhyph       findrule       findrule5.18
-    bash-3.2$ ls
-    __pycache__                     functions.main                  phantomjs-2.1.1-macosx.zip
-    compose.py                      img_view.py                     rec.py
-    format_boost.py                 index.sh                        sox
-    front_rsa                       phantomjs                       t.sh
-    front_rsa.pub                   phantomjs-2.1.1-macosx          test.sh
-    bash-3.2$ . functions.main
-    bash-3.2$ find
-    find           find2perl5.18  findit         findrule5.18
-    find2perl      findhyph       findrule
-    bash-3.2$ findit
-    usage: findit file
-    bash-3.2$ more functions.main
-    #!/usr/bin/env sh
-
-    function findit() {
-        if [ $# -lt 1 ]; then
-            echo "usage: findit file"
-            return 1
-        fi
-        find / -name $1 -print
-    }
-    bash-3.2$ unset findit
-    bash-3.2$ find
-    find           find2perl      find2perl5.18  findhyph       findrule       findrule5.18
-#+END_SRC
+      function findit() {
+	  if [ $# -lt 1 ]; then
+	      echo "usage: findit file"
+	      return 1
+	  fi
+	  find / -name $1 -print
+      }
+      bash-3.2$ unset findit
+      bash-3.2$ find
+      find           find2perl      find2perl5.18  findhyph       findrule       findrule5.18
+    #+END_SRC
 
 *** getopts
 
@@ -627,19 +767,20 @@ cat <<< $(command)
 	}
       #+end_src
 
-- **调用该函数**
-  #+begin_src sh
-    parse_cmd $@
+    - **调用该函数**
+  
+    #+begin_src sh
+      parse_cmd $@
 
-    case $? in
-	1) echo "something wrong"
-	    ;;
-	0) echo "seems ok"
-	    echo ALL is $ALL
-	    echo VERBOSE is $VERBOSE
-	    echo HELP is $HELP
-	    echo FILE is $FILE
-	    echo COPIES is $COPIES
-	    ;;
-    esac
-  #+end_src
+      case $? in
+	  1) echo "something wrong"
+	      ;;
+	  0) echo "seems ok"
+	      echo ALL is $ALL
+	      echo VERBOSE is $VERBOSE
+	      echo HELP is $HELP
+	      echo FILE is $FILE
+	      echo COPIES is $COPIES
+	      ;;
+      esac
+    #+end_src

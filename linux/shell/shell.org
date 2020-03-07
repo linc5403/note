@@ -1,6 +1,6 @@
 #+LATEX_HEADER: \usepackage{ctex}
 * shell命令
-* shell命令组合
+* shell命令示例
 ** 查看文件夹下有多少个文件
    #+begin_src sh
      ls -l | grep "^-" | wc -l
@@ -9,3 +9,16 @@
    #+begin_src sh
      sudo salt 'minion' cmd.run "sudo docker exec -it  zhiying-worker-main bash -c 'pip install --upgrade youtube-dl'
    #+end_src
+** sed替换字符串
+   #+begin_src sh
+     find ./ -type f -exec sed -i "s/com.tianmaying/club.banyuan/g" {} \;
+   #+end_src
+** awk 不打印某一列
+   #+begin_src sh
+     history| grep "sed" | grep -v "history" | awk '{$1 = ""; print $0}'
+   #+end_src
+** 打印占用内存高的进程
+   #+begin_src sh
+     ps auxf | sort -nr -k 3 | head -5 | awk '{$1 = ""; $2 = ""; for (i=4; i < 12; i++) $i=""; print $0}'
+   #+end_src
+

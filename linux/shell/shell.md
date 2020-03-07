@@ -207,7 +207,7 @@ while read -r line; do echo $line; done < <(ps aux | grep hunch)
 
 ### cat
 
-* \-v  
+* \-v
 显示控制字符  
 * 编辑文件 ctrl-D结束
 > 
