@@ -728,7 +728,7 @@
 
 *** getopts
 
-    - **解析命令行参数的函数**  
+    - 解析命令行参数的函数
       #+begin_src sh
 	function parse_cmd() {
 	    ALL=false
@@ -767,7 +767,7 @@
 	}
       #+end_src
 
-    - **调用该函数**
+    - 调用该函数
   
     #+begin_src sh
       parse_cmd $@
