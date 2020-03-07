@@ -1,12 +1,13 @@
 #+LATEX_HEADER \usepackage {ctex}
 
 * Shell
-
 ** Important commands
 
-   | command | meaning                    |
-   |---------+----------------------------|
-   | type -a | 查看命令在系统中的可用情况 |
+   | command | meaning                    | reference                            |
+   |---------+----------------------------+--------------------------------------|
+   | type -a | 查看命令在系统中的可用情况 |                                      |
+   | fdupes  | 查找重复文件               | https://linux.cn/article-6127-1.html |
+   | fslint  | 还是查找重复文件           |                                      |
 
 ** shell cmd
 
@@ -77,8 +78,8 @@
 
 *** xargs
     #+begin_src sh
-      ls -tr1 | tail -5 | xargs -i cp '{}' dest/folder/
-      xargs -n1 -i cp '{}' dest/folder
+      ls -tr1 | tail -5 | xargs -i cp {} dest/folder/
+      xargs -n1 -i cp {} dest/folder
     #+end_src
     
     - 文件名包含空格
@@ -442,7 +443,6 @@
     - [[https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html][参考资料]]
 
 ** shell变量和参数
-
 *** 变量设置时的不同模式
 
     */注意：:=不能单独使用，需要在其他语句中使用，如echo，if等/*
@@ -473,6 +473,58 @@
       反引号用于设置系统命令的输出到变量
     - *反斜线*
       如果下一个字符有特殊含义，反斜线防止shell误解其含义
+
+*** 参数展开(parameter expantion)
+    #+begin_example
+      ${parameter:-word} # parameter为空替换为word
+      ${parameter:=word} # parameter为空替换，并将值赋给$parameter变量
+      bash-3.2$ unset a
+      bash-3.2$ echo ${a:-1234} # a为空，输出新的值，但不对a赋值
+      1234
+      bash-3.2$ echo $a
+
+      bash-3.2$ echo ${a:=1234} # a为空，输出新的值，同时对a赋值
+      1234
+      bash-3.2$ echo $a
+      1234
+      bash-3.2$ echo ${a:=abcd} # a不为空，输出a
+      1234
+      bash-3.2$ echo $a
+      1234
+      bash-3.2$ echo ${a:-abcd} # a不为空，输出a
+      1234
+    #+end_example
+
+    #+begin_example
+      ${parameter:?word} # parameter为空报错, 主要用于排查错误
+      ${parameter:+word} # parameter不为空替换
+    #+end_example
+
+    #+begin_example
+      ${#parameter}      # 获得字符串的长度
+    #+end_example
+
+
+    截取字符串---有了下面这四种用法就不必使用cut命令来截取字符串了。
+    #+begin_src sh
+      ${parameter%word}  # 最小限度从后面截取word
+      ${parameter%%word} # 最大限度从后面截取word
+      ${parameter#word}  # 最小限度从前面截取word
+      ${parameter##word} # 最大限度从前面截取word
+    #+end_src
+
+    #+begin_example
+      bash-3.2$ a=abc.txt
+      bash-3.2$ echo ${a%.txt}
+      abc
+      bash-3.2$ echo ${a#abc}
+      .txt
+    #+end_example
+
+    - 替换文件后缀名的一个方法：
+      #+begin_src sh
+	for i in `find ./ -name "*.list"`; do sudo mv $i ${i%.jpg}.bak; done
+      #+end_src
 
 ** 条件测试
    
