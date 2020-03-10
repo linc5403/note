@@ -1,0 +1,38 @@
+* install
+  [[https://lisp-lang.org/learn/getting-started/][get start]]
+
+  #+begin_example
+      ==== quicklisp installed ====
+
+	To load a system, use: (ql:quickload "system-name")
+
+	To find systems, use: (ql:system-apropos "term")
+
+	To load Quicklisp every time you start Lisp, use: (ql:add-to-init-file)
+
+	For more information, see http://www.quicklisp.org/beta/
+
+    I will append the following lines to #P"/home/linc/.sbclrc":
+
+      ;;; The following lines added by ql:add-to-init-file:
+      #-quicklisp
+      (let ((quicklisp-init (merge-pathnames ".quicklisp/setup.lisp"
+					     (user-homedir-pathname))))
+	(when (probe-file quicklisp-init)
+	  (load quicklisp-init)))
+
+    Press Enter to continue.
+  #+end_example
+
+* 学习路径
+  [[https://stevelosh.com/blog/2018/08/a-road-to-common-lisp/][A Road to Common Lisp]]
+
+  [[http://www.paulgraham.com/lisp.html][文化]]
+
+* 书籍
+  1. [[https://www.cs.cmu.edu/~dst/LispBook/][Common Lisp: A Gentle Introduction to Symbolic Computation]]
+  2. [[https://acl.readthedocs.io/en/latest/zhTW/index.html][ANSI Common Lisp]]
+  3. [[http://www.gigamonkeys.com/book/][Practical Common Lisp]]
+  4. [[http://www.paulgraham.com/onlisptext.html][On Lisp]]
+
+* 有用的链接

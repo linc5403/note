@@ -83,14 +83,21 @@
     #+end_src
     
     - 文件名包含空格
-      #+begin_src sh
-	find ./ -print0 |xargs -0 cp '{}' /data
-      #+end_src
 
-      文件名中包含空格的情况下使用， ~-print0~ 和 ~-0~ 配合使用，能够将带空格的文件找出来。
+      - 仅仅使用find
+	#+begin_src sh
+	  find ./ -print0 |xargs -0 cp '{}' /data
+        #+end_src
 
-    - ~xargs cp~
+	文件名中包含空格的情况下使用， ~-print0~ 和 ~-0~ 配合使用，能够将带空格的文件找出来。
 
+      - 带grep的情况
+	#+begin_src sh
+	  find ./ -type f | grep -v "\.git" |grep -v "code" | grep "02" | xargs -d '\n' file
+        #+end_src
+	使用 ~-d '\n'~ 选项指定使用回车作为参数的分割符
+
+    - 参数在中间的情况
       #+begin_src sh
 	find ./ -name "*.mp4" | xargs -i cp '{}' /data
       #+end_src

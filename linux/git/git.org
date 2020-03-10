@@ -1,3 +1,4 @@
+#+LATEX_HEADER: \usepackage {ctex}
 * 本地初始化
 
   #+begin_example
@@ -116,7 +117,15 @@
   git submodule deinit --all
 #+end_example
 
-** TODO 管理submodule
+** DONE 管理submodule
+   CLOSED: [2020-03-09 Mon 14:04]
+
+   #+begin_example
+     git submodule add https://github.com/chaconinc/DbConnector
+   #+end_example
+   
+   *git submodule add* 命令添加一个子模块
+
 ** 参考
    [[https://git-scm.com/book/zh/v2/Git-%E5%B7%A5%E5%85%B7-%E5%AD%90%E6%A8%A1%E5%9D%97][官方文档]]
 

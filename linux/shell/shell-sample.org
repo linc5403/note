@@ -21,6 +21,10 @@
    #+begin_src sh
      ps auxf | sort -nr -k 3 | head -5 | awk '{$1 = ""; $2 = ""; for (i=4; i < 12; i++) $i=""; print $0}'
    #+end_src
+
+   #+begin_src sh
+     ps aux | sort -k 4,4nr | head -10 | awk 'BEGIN {print "MEM\tVSZ\tRSS\tcmd\n============================================="}{print $4 "\t" $5 "\t" $6 "\t" $11}'
+   #+end_src
 ** 删除特殊文件名的文件 - ~rm --~
    #+begin_src sh
      rm -- -df
