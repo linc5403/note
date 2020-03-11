@@ -5,9 +5,10 @@
 * linux通过DLNA共享视频，图片，音乐
   [[https://www.omgubuntu.co.uk/2019/10/ubuntu-dlna-media-sharing-server][dlna共享]]
 
-* TODO linux 显示按键
+* DONE linux 显示按键
+  CLOSED: [2020-03-11 Wed 08:44]
 
-[[https://gitlab.com/wavexx/screenkey][screenkey]]
+  [[https://gitlab.com/wavexx/screenkey][screenkey]]
 
 * gnome-shell memory leak
   1) Press Alt + F2
