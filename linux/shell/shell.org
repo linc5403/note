@@ -449,6 +449,16 @@
     
     - [[https://www.gnu.org/software/coreutils/manual/html_node/sort-invocation.html][参考资料]]
 
+*** ripgrep
+
+**** 安装
+     [[https://github.com/BurntSushi/ripgrep/][github地址]]
+
+**** 指定文件类型进行搜索（后缀名）
+     #+begin_example
+       rg -torg png
+     #+end_example
+     在.org文件中搜索png字符串
 ** shell变量和参数
 *** 变量设置时的不同模式
 

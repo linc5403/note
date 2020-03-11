@@ -1,0 +1,19 @@
+#+LATEX_HEADER: \usepackage {ctex}
+* apt
+** apt list --upgradable
+   show upgradable packages
+* timezone
+** 用户时区
+   #+begin_quote
+     \tilde/.profile
+   #+end_quote
+   #+begin_src sh
+     TZ='Asia/Shanghai'; export TZ
+   #+end_src
+** 系统时区
+   #+begin_src sh
+     hunch@db-in-server:~$ sudo rm /etc/localtime
+     hunch@db-in-server:~$ sudo ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+   #+end_src
+
+
