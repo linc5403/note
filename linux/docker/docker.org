@@ -171,7 +171,8 @@
 	 sudo systemctl restart docker
        #+end_src
 
-** TODO 国内仓库
+** DONE 国内仓库
+   CLOSED: [2020-03-11 Wed 10:13]
    ~/etc/docker/daemon.json~
    #+begin_src json
      {
