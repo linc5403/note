@@ -9,9 +9,50 @@
   CLOSED: [2020-03-11 Wed 08:44]
 
   [[https://gitlab.com/wavexx/screenkey][screenkey]]
+  
+  [[file:~/software/screenkey/screenkey][本地运行文件]]
+
+  #+begin_example
+    ./screenkey -t 0.5 --opacity 0.1 --vis-shift 
+  #+end_example
 
 * gnome-shell memory leak
   1) Press Alt + F2
   2) Type the letter ‘r’
   3) Hit Enter/Return
 
+* svg->png
+**  inkscape
+   [[https://inkscape.org/][homepage]]
+   
+   Try this command to convert in.svg to a 1000×1000 png image:
+   #+begin_src sh
+     inkscape -z -e out.png -w 1000 -h 1000 in.svg
+   #+end_src
+* remote linux GUI
+** GUI program
+   [[https://uisapp2.iu.edu/confluence-prd/pages/viewpage.action?pageId=280461906][参考]]
+
+   #+begin_example
+     ssh -Y username@silo.sice.indiana.edu
+   #+end_example
+** DONE remote desktop
+   CLOSED: [2020-03-14 Sat 10:36]
+*** linux
+    1. install x11vnc
+       #+begin_example
+	 sudo apt install x11vnc
+       #+end_example
+    2. configure password
+       #+begin_example
+	 x11vnc -storepasswd
+       #+end_example
+    3. start service
+       #+begin_example
+	 x11vnc -usepw
+       #+end_example
+*** macos
+    vnc-viewer
+    #+begin_example
+      https://www.realvnc.com/en/connect/download/viewer/macos/
+    #+end_example
