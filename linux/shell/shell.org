@@ -352,6 +352,14 @@
 	awk -F/ '{if ($NF ~/org$/) print $2 "/" $3}' find_out
       #+end_example
       上面的 ~!~ 表示取反操作
+      
+    - if else 和参数传递
+      
+      #+begin_example
+	a=`head -n 1 file.txt | wc -w`
+	c=`wc -l file.txt| awk '{print $1}'`
+	for i in {1..$a}; do awk -v b="$i" -v c="$c" '{printf $b; if (NR==c) {printf "\n"} else {printf " "}}' file.txt; done
+      #+end_example
 
 *** sed
 
