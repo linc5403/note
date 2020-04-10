@@ -1,5 +1,10 @@
 #+LATEX_HEADER: \usepackage {ctex}
-* TODO chromecast投屏
+* DONE chromecast投屏
+  CLOSED: [2020-04-06 Mon 10:33]
+  买了EZCast将就可以用,只是效果不太好.
+
+  暂时不折腾chromecast了.
+
   [[https://vitux.com/how-to-cast-video-from-ubuntu-to-chromecast/][linux 桌面投屏到投影仪]]
 
 * linux通过DLNA共享视频，图片，音乐
