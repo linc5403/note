@@ -1,6 +1,41 @@
 #+LATEX_HEADER: \usepackage{ctex}
-* docker
 
+#+begin_src plantuml :file ./img/docker-overview.svg
+  @startmindmap
+  ,* docker
+  ,** docker 操作
+  ,*** search
+  ,****_ docker search 命令进行查找
+  ,****_ docker + 镜像名字搜索对应的docker hub
+  ,*** pull
+  ,****_ docker pull 拉对应的镜像到本地
+  ,****_ 注意版本号
+  ,*** run
+  ,**** 不退出
+  ,*****_ docker run -dit <image>
+  ,*** 删除
+  ,**** 删除容器
+  ,*****_ docker rm [docker id | docker name]
+  ,**** 删除镜像
+  ,*****_ docker rmi [docker image name: tag]
+  ,** docker 管理
+  ,*** docker system
+  ,*** docker prune
+  ,*** start
+  ,*** restart
+  ,*** stop
+  ,** docker 制作
+  ,*** docker file
+  ,** docker 编排
+  ,*** docker-compose
+  
+  @endmindmap
+#+end_src
+
+#+RESULTS:
+[[file:./img/docker-overview.svg]]
+
+* docker
 ** linux下的安装
 
 *** Step 1 apt-get install docker-ce
@@ -213,7 +248,7 @@
      docker cp mycontainer：/opt/testnew/file.txt /opt/test/
    #+end_src
 
-[[file:docker.org][返回]]
+   [[file:docker.org][返回]]
 
 * docker-compose
 
