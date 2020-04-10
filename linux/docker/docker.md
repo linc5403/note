@@ -1,34 +1,35 @@
 
 # Table of Contents
 
-1.  [docker](#org3a049e8)
-    1.  [linux下的安装](#org1ef1af7)
-        1.  [Step 1 apt-get install docker-ce](#org66b9263)
-        2.  [Step 2 — Executing the Docker Command Without Sudo (Optional)](#org678072f)
-        3.  [Step 3 修改docker数据存储路径](#orgfcd2178)
-    2.  [国内仓库](#org218831d)
-    3.  [常用命令](#org011ce53)
-    4.  [删除](#orgde34b7f)
-    5.  [copy file](#org7cbd98a)
-2.  [docker-compose](#orgc6d192a)
-    1.  [docker-compose](#orgba00d81)
-    2.  [compose 不退出](#orgb8ddbc1)
-    3.  [docker-compose安装](#orgc0091e7)
-3.  [docker-file](#org8107381)
+1.  [docker](#org6581ccb)
+    1.  [linux下的安装](#org7a59760)
+        1.  [Step 1 apt-get install docker-ce](#orgf2159f5)
+        2.  [Step 2 — Executing the Docker Command Without Sudo (Optional)](#org02561dc)
+        3.  [Step 3 修改docker数据存储路径](#org9703901)
+    2.  [国内仓库](#orgcb2a446)
+    3.  [常用命令](#org1150584)
+    4.  [删除](#org457cddb)
+    5.  [copy file](#org3bc3416)
+2.  [docker-compose](#org9134a62)
+    1.  [docker-compose](#orgbbe38e4)
+    2.  [compose 不退出](#org8fe439e)
+    3.  [docker-compose安装](#org62681c5)
+3.  [docker-file](#org2e63a81)
+
+![img](./img/docker-overview.svg)
 
 
-
-<a id="org3a049e8"></a>
+<a id="org6581ccb"></a>
 
 # docker
 
 
-<a id="org1ef1af7"></a>
+<a id="org7a59760"></a>
 
 ## linux下的安装
 
 
-<a id="org66b9263"></a>
+<a id="orgf2159f5"></a>
 
 ### Step 1 apt-get install docker-ce
 
@@ -93,7 +94,7 @@ The output should be similar to the following, showing that the service is activ
 Installing Docker now gives you not just the Docker service (daemon) but also the docker command line utility, or the Docker client. We'll explore how to use the docker command later in this tutorial.
 
 
-<a id="org678072f"></a>
+<a id="org02561dc"></a>
 
 ### Step 2 — Executing the Docker Command Without Sudo (Optional)
 
@@ -159,7 +160,7 @@ Let's explore the docker command next.
     Edit : This doesn't require you to type your password either, which su will.
 
 
-<a id="orgfcd2178"></a>
+<a id="org9703901"></a>
 
 ### Step 3 修改docker数据存储路径
 
@@ -180,9 +181,9 @@ Let's explore the docker command next.
         sudo systemctl restart docker
 
 
-<a id="org218831d"></a>
+<a id="orgcb2a446"></a>
 
-## TODO 国内仓库
+## DONE 国内仓库
 
 `/etc/docker/daemon.json`
 
@@ -191,7 +192,7 @@ Let's explore the docker command next.
     }
 
 
-<a id="org011ce53"></a>
+<a id="org1150584"></a>
 
 ## 常用命令
 
@@ -209,7 +210,7 @@ Let's explore the docker command next.
     docker build [选项] <上下文路径/URL/->
 
 
-<a id="orgde34b7f"></a>
+<a id="org457cddb"></a>
 
 ## 删除
 
@@ -219,7 +220,7 @@ Let's explore the docker command next.
     docker system df
 
 
-<a id="org7cbd98a"></a>
+<a id="org3bc3416"></a>
 
 ## copy file
 
@@ -229,7 +230,7 @@ Let's explore the docker command next.
 [返回](docker.md)
 
 
-<a id="orgc6d192a"></a>
+<a id="org9134a62"></a>
 
 # docker-compose
 
@@ -242,7 +243,7 @@ Let's explore the docker command next.
     docker-compose down #停止并销毁容器
 
 
-<a id="orgba00d81"></a>
+<a id="orgbbe38e4"></a>
 
 ## docker-compose
 
@@ -271,7 +272,7 @@ Let's explore the docker command next.
           - els1:db
 
 
-<a id="orgb8ddbc1"></a>
+<a id="org8fe439e"></a>
 
 ## compose 不退出
 
@@ -291,7 +292,7 @@ Docker镜像的缺省命令是 `bash~，如果不加 ~-it`, `bash` 命令执行�
 第一个对应于 `docker run` 中的 `-i` ,第二个对应于 `-t` 。
 
 
-<a id="orgc0091e7"></a>
+<a id="org62681c5"></a>
 
 ## docker-compose安装
 
@@ -312,7 +313,7 @@ Docker镜像的缺省命令是 `bash~，如果不加 ~-it`, `bash` 命令执行�
         autoload -Uz compinit && compinit -i
 
 
-<a id="org8107381"></a>
+<a id="org2e63a81"></a>
 
 # TODO docker-file
 
