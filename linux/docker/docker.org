@@ -26,6 +26,13 @@
   ,*** stop
   ,** docker 制作
   ,*** docker file
+  ,****_ FROM:基础镜像
+  ,****_ RUN: 运行命令
+  ,****_ COPY: 拷贝文件
+  ,****_ CMD: 启动脚本
+  ,*** docker build
+  ,****_ docker build -f ~/docker/p3_web/Dockerfile -t linchuan/p3-web /data/code
+  ,****_ docker build [选项] <上下文路径/URL/->
   ,** docker 编排
   ,*** docker-compose
   
@@ -210,11 +217,14 @@
    CLOSED: [2020-03-11 Wed 10:13]
    ~/etc/docker/daemon.json~
    #+begin_src json
-     {
-       "registry-mirrors": ["https://registry.docker-cn.com"]
-     }
-
+     {"registry-mirrors":["https://8hajhgqd.mirror.aliyuncs.com/"]}
    #+end_src
+
+** 重启服务
+   #+begin_example
+     sudo systemctl daemon-reload
+     sudo systemctl restart docker
+   #+end_example
 
 ** 常用命令
    #+begin_src sh
@@ -263,9 +273,98 @@
   #+end_example
 
 ** docker-compose
+   
+   #+begin_src yaml
+     version: '3.7'
+     services:
+       proxy:
+	 # build:
+	 #   context: .
+	 #   dockerfile: Dockerfile_proxy
+	 container_name: dev-proxy
+	 restart: always
+	 image: registry.cn-hangzhou.aliyuncs.com/hunch/dev-env:0.1-proxy
+	 stdin_open: true
+	 tty: true
+       rabbitmq:
+	 container_name: dev-rabbitmq
+	 hostname: my-rabbitmq
+	 restart: always
+	 image: rabbitmq:3.7
+	 stdin_open: true
+	 tty: true
+       redis:
+	 container_name: dev-redis
+	 restart: always
+	 image: redis:5.0
+	 stdin_open: true
+	 tty: true
+       web:
+	 # build:
+	 #   dockerfile: ${AISHIPIN_PATH}/deploy/dev_env/Dockerfile_worker
+	 #   context: ${AISHIPIN_PATH}
+	 container_name: dev-web
+	 volumes:
+	   - type: bind
+	     source: ${AISHIPIN_PATH}
+	     target: /var/www/aishipin
+	 restart: always
+	 ports:
+	   - '8070:8080/tcp'
+	   - '8071:8081/tcp'
+	 environment:
+	   - CLUSTER=dev
+	   - DJANGO_SETTINGS_MODULE=aivideo.settings_dev
+	 image: registry.cn-hangzhou.aliyuncs.com/hunch/dev-env:0.3-web
+	 depends_on:
+	   - proxy
+	 working_dir: /var/www/aishipin/aivideo
+	 command: ["/var/www/aishipin/deploy/dev_env/start_dev_web.sh"]
+	 stdin_open: true
+	 tty: true
+       worker:
+	 # build:
+	 #   dockerfile: ${AISHIPIN_PATH}/deploy/dev_env/Dockerfile_worker
+	 #   context: ${AISHIPIN_PATH}
+	 container_name: dev-worker
+	 volumes:
+	   - type: bind
+	     source: ${AISHIPIN_PATH}
+	     target: /var/www/aishipin
+	 restart: always
+	 environment:
+	   - CLUSTER=dev
+	   - DJANGO_SETTINGS_MODULE=aivideo.settings_dev
+	 image: registry.cn-hangzhou.aliyuncs.com/hunch/dev-env:0.3-worker
+	 depends_on:
+	   - proxy
+	 working_dir: /var/www/aishipin/aivideo
+	 command: ['python', 'manage.py', 'celery_autoreload']
+	 stdin_open: true
+	 tty: true
+	 # render:
+	 #   # build:
+	 #   #   dockerfile: ${RENDER_PATH}/deploy/dev-env/Dockerfile_render
+	 #   #   context: ${RENDER_PATH}
+	 #   container_name: dev-render
+	 #   volumes:
+	 #     - type: bind
+	 #       source: ${RENDER_PATH}
+	 #       target: /opt/render_engine
+	 #   restart: always
+	 #   hostname: dev-render
+	 #   environment:
+	 #     - CLUSTER=dev
+	 #     # - DJANGO_SETTINGS_MODULE=aivideo.settings_dev
+	 #   image: registry.cn-hangzhou.aliyuncs.com/hunch/dev-env:0.3-render
+	 #   depends_on:
+	 #     - proxy
+	 #   working_dir: /opt/render_engine
+	 #   command: ['python3.6', '/opt/render_engine/run_single_task.py', 'dev-render']
+   #+end_src
 
    #+begin_src yaml
-     version: "0.1"
+     version: "3.7"
      services:
        test1: 
 	 image: "10.8.52.225:5000/base:v1.2.1_autoserver" 
@@ -290,6 +389,20 @@
 	   - els1:db
    #+end_src
 
+   - ports (HOST宿主机:CONTAINER容器)
+     #+begin_example
+       ports:
+	 - "3000"
+	 - "3000-3005"
+	 - "8000:8000"
+	 - "9090-9091:8080-8081"
+	 - "49100:22"
+	 - "127.0.0.1:8001:8001"
+	 - "127.0.0.1:5000-5010:5000-5010"
+	 - "6060:6060/udp"
+	 - "12400-12500:1240"
+     #+end_example
+
 ** compose 不退出
    Docker镜像的缺省命令是 ~bash~，如果不加 ~-it~, ~bash~ 命令执行了自动会退出，加 ~it~ 后 ~docker~ 命令会为容器分配一个伪终端，并接管其 ~stdin/stdout~ 支持交互操作，这时候 ~bash~ 命令不会自动退出
    
@@ -311,7 +424,7 @@
 ** docker-compose安装
    1. install
       #+begin_src sh
-	sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+	sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 	sudo chmod +x /usr/local/bin/docker-compose
       #+end_src
 
@@ -319,7 +432,7 @@
    2. zsh自动补全
       #+begin_src sh
 	mkdir -p ~/.zsh/completion
-	curl -L https://raw.githubusercontent.com/docker/compose/1.23.2/contrib/completion/zsh/_docker-compose > ~/.zsh/completion/_docker-compose
+	curl -L https://raw.githubusercontent.com/docker/compose/1.25.2/contrib/completion/zsh/_docker-compose > ~/.zsh/completion/_docker-compose
       #+end_src
       
       ~.zshrc~ 文件中增加下面两行:
@@ -327,4 +440,64 @@
 	fpath=(~/.zsh/completion $fpath)
 	autoload -Uz compinit && compinit -i
       #+end_example
-* TODO docker-file
+* TODO docker 镜像的制作
+** docker file
+   #+begin_example
+     FROM ubuntu:16.04
+     COPY proxy /proxy
+     COPY proxy/ssh /root/.ssh
+
+     RUN apt-get update -qq &&\
+	 apt-get install -qq --no-install-recommends polipo shadowsocks ssh &&\
+	 echo "==> Clean up..."  &&\
+	     rm -rf /var/lib/apt/lists/*     &&\
+	 chmod +x /proxy/start_proxy.sh  && \
+	 chmod 0600 ~/.ssh/id_rsa*
+
+     CMD ["/proxy/start_proxy.sh"]
+   #+end_example
+   - FROM
+
+     制定基础镜像
+
+   - COPY
+     
+     将上下文的文件和文件夹拷贝到image里面
+
+   - RUN
+     
+     执行相关命令
+     
+     ~cd~ 需要放到这里面来执行
+
+   - CMD
+     
+     最好执行一个 ~shell~ 脚本
+
+* debug
+** ip tools install
+   - ping
+     #+begin_example
+       apt install iputils-ping
+     #+end_example
+   - ifconfig
+     #+begin_example
+       apt install net-tools
+     #+end_example
+   - tcptraceroute
+     #+begin_example
+       apt install tcptraceroute
+     #+end_example
+** 容器访问宿主机
+   - linux
+     
+     ~172.17.0.1~
+
+   - macos
+
+     ~docker.for.mac.host.internal~
+
+** 一直重启怎么办
+
+   - ~docker logs -f <container>~
+     - 
