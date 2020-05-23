@@ -272,7 +272,7 @@
     docker-compose down #停止并销毁容器
   #+end_example
 
-** docker-compose
+** docker-compose 文件
    
    #+begin_src yaml
      version: '3.7'
@@ -473,6 +473,10 @@
    - CMD
      
      最好执行一个 ~shell~ 脚本
+** docker build
+   #+begin_example
+   docker build -t tag .
+   #+end_example
 
 * debug
 ** ip tools install
@@ -500,4 +504,4 @@
 ** 一直重启怎么办
 
    - ~docker logs -f <container>~
-     - 
+
