@@ -1,0 +1,18 @@
+* VIM
+
+** Session
+
+   #+begin_example
+     mksession! ~/.vim/builder.vim
+     mks! ~/.vim/builder.vim
+     source ~/.vim/builder.vim
+   #+end_example
+
+** Command mode
+   | command | purpose          |
+   | q:      | 进入命令编辑模式 |
+   | C-b     | 行首             |
+   | C-e     | 行尾             |
+   | C-w     | 删除上一个词     |
+   | C-u     | 删除整行         |
+
