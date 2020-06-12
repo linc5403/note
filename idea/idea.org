@@ -29,7 +29,8 @@
 | Sout+Tab       | System.out.println                                             |                               |
 | Psvm + Tab     | Main()                                                         |                               |
 
-** TODO linux shortcut
+** DONE linux shortcut
+   CLOSED: [2020-06-03 Wed 23:20]
    | 按键    | 行为                       |
    | M-<INS> | 新建                       |
    | M-1     | 调到导航区/代码区          |

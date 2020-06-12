@@ -61,3 +61,10 @@
     #+begin_example
       https://www.realvnc.com/en/connect/download/viewer/macos/
     #+end_example
+* Thinkpad battery
+  #+begin_src shell
+    sudo apt-get install tlp
+    sudo apt-get install tp-smapi-dkms acpi-call-dkms
+    sudo service tlp start
+    sudo tlp-stat -s -c -b
+  #+end_src
