@@ -92,7 +92,11 @@
         #+end_src
 
 	文件名中包含空格的情况下使用， ~-print0~ 和 ~-0~ 配合使用，能够将带空格的文件找出来。
-
+	
+	#+begin_src sh
+	  # mac os 下面的特殊情况
+	  find ./ -type f -name "*.mkv" -print0  | xargs -0 -I{} mv {} /Volumes/aigo_S02/video
+	#+end_src
       - 带grep的情况
 	#+begin_src sh
 	  find ./ -type f | grep -v "\.git" |grep -v "code" | grep "02" | xargs -d '\n' file
