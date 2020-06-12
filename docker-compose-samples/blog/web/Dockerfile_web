@@ -1,0 +1,18 @@
+FROM ubuntu:18.04
+COPY  jdk-11.0.6_linux-x64_bin.tar.gz /root/
+COPY  blog-0.0.1-SNAPSHOT.jar /root/
+COPY  start.sh /root/
+
+
+RUN cd /root && tar xzf jdk-11.0.6_linux-x64_bin.tar.gz && chmod +x /root/start.sh
+
+# install java -11
+# RUN apt-get update -qq &&\
+#     apt-get install -qq --no-install-recommends polipo shadowsocks ssh &&\
+#     echo "==> Clean up..."  &&\   
+# 	rm -rf /var/lib/apt/lists/*     &&\
+#     chmod +x /proxy/start_proxy.sh  && \
+#     chmod 0600 ~/.ssh/id_rsa*
+
+# CMD ["java -j **.jar"]
+CMD ["/root/start.sh"]

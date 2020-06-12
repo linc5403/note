@@ -103,6 +103,9 @@
       #+begin_src sh
 	find ./ -name "*.mp4" | xargs -i cp '{}' /data
       #+end_src
+      #+begin_src sh
+	find ./ -type f -name "*.mp4" | xargs -I{} cp {} video/
+      #+end_src
 
 *** echo
     #+BEGIN_EXAMPLE

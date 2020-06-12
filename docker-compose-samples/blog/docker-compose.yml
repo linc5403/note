@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  rabbitmq:
+    container_name: my-rabbitmq
+    restart: always
+    image: rabbitmq:3.7
+    stdin_open: true
+    tty: true
+  redis:
+    container_name: my-redis
+    restart: always
+    image: redis:5.0.7
+    stdin_open: true
+    tty: true
+  web:
+    container_name: blog-web
+    # volumes:
+    #   - type: bind
+    #     source: ${AISHIPIN_PATH}
+    #     target: /var/www/aishipin
+    restart: always
+    ports:
+        # host:guest
+      - '8080:8080/tcp'
+        # environment:
+        #   - CLUSTER=dev
+        #   - DJANGO_SETTINGS_MODULE=aivideo.settings_dev
+    image: blog-web:v0.3
+    depends_on:
+      - redis
+      - rabbitmq
+        # working_dir: /var/www/aishipin/aivideo
+        # command: ["/var/www/aishipin/deploy/dev_env/start_dev_web.sh"]
+        # command: ["/root/start.sh"]
+    stdin_open: true
+    tty: true

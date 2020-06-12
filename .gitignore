@@ -1,4 +1,6 @@
 .DS_Store
+*.jar
+*.gz
 *.swp
 .python-version
 .ipynb_checkpoints/
