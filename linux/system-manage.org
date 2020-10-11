@@ -17,3 +17,12 @@
    #+end_src
 
 
+* usb挂载失败
+
+  #+begin_src sh
+    sudo ntfsfix /dev/sda1
+  #+end_src
+
+  #+begin_src sh
+    mount /dev/sda1 /mnt/123
+  #+end_src

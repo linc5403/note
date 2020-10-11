@@ -1,0 +1,34 @@
+** mysql8.0重新安装后的问题
+
+   - 维护帐号
+
+     #+begin_example
+       ➜  ~ sudo more /etc/mysql/debian.cnf
+       [sudo] password for linc:
+       # Automatically generated for Debian scripts. DO NOT TOUCH!
+       [client]
+       host     = localhost
+       user     = debian-sys-maint
+       password = ZuRxW7oWTPGKUU1x
+       socket   = /var/run/mysqld/mysqld.sock
+       [mysql_upgrade]
+       host     = localhost
+       user     = debian-sys-maint
+       password = ZuRxW7oWTPGKUU1x
+       socket   = /var/run/mysqld/mysqld.sock
+     #+end_example
+
+   - 使用维护帐号登录
+
+     #+begin_example
+       ➜  ~ mysql -udebian-sys-maint -pZuRxW7oWTPGKUU1x
+     #+end_example
+
+   - 设置root的密码
+
+     #+begin_example
+       alter user 'root'@'localhost' identified with caching_sha2_password BY '123';
+       flush privileges;
+     #+end_example
+
+   - 可以使用root进行登录了...
