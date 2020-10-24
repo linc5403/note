@@ -40,3 +40,16 @@
    | C-q     | Quick documentation lookup |
    | C-p     | Parameters info            |
    | C-M-o   | 优化import                 |
+
+*** TODO emacs
+
+   | 行为                   | 按键    |
+   | 提示(suggestion)       | M-/     |
+   | 去掉不必要的import     | M-S-RET |
+   | 移动到代码块开始       | C-M-[   |
+   | 移动到代码块结束       | C-M-]   |
+   | 移动到代码块开始并选中 | C-S-[   |
+   | 移动到代码块结束并选中 | C-S-]   |
+   | 折叠/打开              | C-.     |
+
+    
