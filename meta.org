@@ -68,3 +68,9 @@
     sudo service tlp start
     sudo tlp-stat -s -c -b
   #+end_src
+  
+  https://support.system76.com/articles/battery/
+
+* Night Light
+
+  Settings->Devices->Display->Night Light

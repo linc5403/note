@@ -458,7 +458,7 @@
    #+end_example
    - FROM
 
-     制定基础镜像
+     指定基础镜像
 
    - COPY
      
