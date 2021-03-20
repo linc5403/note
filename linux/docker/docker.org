@@ -440,7 +440,8 @@
 	fpath=(~/.zsh/completion $fpath)
 	autoload -Uz compinit && compinit -i
       #+end_example
-* TODO docker 镜像的制作
+* DONE docker 镜像的制作
+  CLOSED: [2021-03-14 Sun 17:51]
 ** docker file
    #+begin_example
      FROM ubuntu:16.04

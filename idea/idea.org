@@ -41,7 +41,8 @@
    | C-p     | Parameters info            |
    | C-M-o   | 优化import                 |
 
-*** TODO emacs
+*** DONE emacs
+    CLOSED: [2021-03-14 Sun 17:49]
 
    | 行为                   | 按键        |
    | 提示(suggestion)       | M-/         |

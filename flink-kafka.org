@@ -1,0 +1,45 @@
+#+LATEX_HEADER: \usepackage{ctex}
+
+#+begin_src plantuml :file ./framework.svg
+  @startuml
+  package "North Interface" {
+	  [RestController]
+	  [WebSocketServer]
+  }
+
+  package "Kafka" {
+	  [Kafka消息总线] as kafka
+	  [WebSocketServer] <-- kafka
+  }
+
+  package "Flink" {
+	  [SQL数据处理] as sqlProcessor
+	  [Redis数据处理] as redisProcessor
+	  [Kafka 数据处理] as kafkaProcessor
+  }
+
+
+  Component [SQL数据] as sqlSource
+  Component [Reid数据] as redisSource
+
+  sqlSource -up-> sqlProcessor:"compt2e8b85-source-1\n设备在线信息\ncomptbc19a5-source\n设备位置信息"
+  sqlProcessor -up-> kafka
+
+  redisSource -up-> redisProcessor:"comptbc19a5-source-1\n设备省份\ncompt7d8f5b-source-1\n统计闸门夹紧事件的历史趋势\ncompt9a964e-source-1\n设备注册历史统计\ncompta59b41-source-1\n设备告警相关趋势"
+  redisProcessor -up-> kafka
+
+  kafka --> kafkaProcessor
+
+  kafkaProcessor -up-> kafka
+
+  @enduml
+
+#+end_src
+
+#+RESULTS:
+[[file:./framework.svg]]
+
+
+* TODO Kafka数据存放
+
+* TODO KafkaSource从何而来

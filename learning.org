@@ -1,0 +1,174 @@
+* spring测试
+
+** 依赖
+
+   *junit*
+
+** 测试类
+
+   #+begin_example
+     @SpringBootTest
+     @Runwith(SpringRunner.class) - import org.springframework.test.context.junit4.SpringRunner;
+     @Test - import org.junit.Test;
+     @Runwith - import org.junit.runner.RunWith;
+   #+end_example
+
+
+
+
+
+* Mapper的配置
+
+  1. @MapperScan
+
+    启动类上配置扫描的java文件位置
+
+  2. application.yml配置xml的classpath，指定到哪里查找对应的mapper xml文件
+
+    #+begin_example
+      mybatis-plus:
+	mapper-locations: classpath:com/example/mybatisplusdemo/mapper/xml/*.xml
+    #+end_example
+
+    classpath和classpath*的区别：
+
+    - classpath
+
+      只会查找指定的路径下的文件，而且只会取第一个找到的
+
+    - classpath*
+
+      查找所有符合规则的文件，合并起来进行使用
+      
+    所以在这个场景里面，使用classpath就可以了
+
+  3. 在pom里面配置build的resources，将src目录下的xml拷贝到classpath里面（resources）
+
+     #+begin_example
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+        </resources>
+     #+end_example
+
+* TODO mvn package 运行测试
+
+* TODO 如何设置测试环境给test类
+
+* ${} vs #{}
+
+  1. 能使用 #{ } 的地方就用 #{ }
+
+     #{ } 解析为一个 JDBC 预编译语句（prepared statement）的参数标记符。
+
+  2. 表名作为变量时，必须使用 ${ }
+
+     ${ } 仅仅为一个纯碎的 string 替换，在动态 SQL 解析阶段将会进行变量替换
+
+* Mybatis Plus 使用
+
+** 注解
+
+*** @TableName - 表名注解
+
+*** @TableId - 表主键标识
+
+    @TableId(type = IdType.ASSIGN_UUID)
+
+    缺省type为None。 只有当插入数据主键为空时才会根据类型生成主键
+
+    
+
+* 杂记
+
+** @EqualsAndHashCode
+
+   lombok
+
+   @Data相当于@Getter @Setter @RequiredArgsConstructor @ToString @EqualsAndHashCode这5个注解的合集。
+
+   ~boolean callSuper() default false;~
+
+   缺省不会调用父类的equals和hash方法，而是将所有的成员变量都用作hash和equals
+
+** @Accessors(chain = true)
+
+   lombok
+
+   chain = true，表示setter方法会返回该对象，而不是void。 缺省是false。
+
+** @Excel
+
+   导出Excel的字段
+
+** @ApiModelProperty(value = "设备名称（只支持字母、数字、下划线 4~64个字符）")
+
+   Swagger
+
+** @ApiModel(value="device_info对象", description="设备管理")
+
+   Swagger
+
+** @Dict
+
+   增加了从code到text的翻译，查 ~sys_dict_item~ 这张表，所以代码里面一般没有设置text，里面还使用了Cache
+
+*** 或许应该直接使用 ~dicText()~
+
+** @DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss")
+
+   String to Date
+
+   pattern 指定解析的字符串的格式
+
+** @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")
+   
+   Date to String
+
+   序列号时使用，可以在spring中进行配置
+
+** cron格式
+
+   ~*~ 表示每一个时间单位
+   
+   ~/~ 表示增量，每隔多久  
+
+   #+begin_example
+     MIN HOUR DAY MONTH DAYOFWEEK   COMMAND
+     # at 6:10 a.m. every day
+     10 6 * * * date
+
+     # every two hours at the top of the hour
+     0 */2 * * * date
+
+     # every two hours from 11p.m. to 7a.m., and at 8a.m.
+     0 23-7/2,8 * * * date
+
+     # at 11:00 a.m. on the 4th and on every mon, tue, wed
+     0 11 4 * mon-wed date
+
+     # 4:00 a.m. on january 1st
+     0 4 1 jan * date
+   #+end_example
+
+   https://crontab.guru/
+
+   一般来说不需要用到 ~?~ ，因为一般不会同时指定日期和星期几
+
+** JVM
+
+*** 打开堆内存OOM导出
+
+    #+begin_example
+      java -XX:+HeapDumpOnOutOfMemoryError
+    #+end_example
+
+    缺省导出在执行java命令的目录下，以进程号命名
+
+    也可以加上 ~-XX:HeapDumpPath=<file-or-dir-path>~ 选项用以指定输出的目录
+
+    [[https://www.baeldung.com/java-heap-dump-capture][参考连接]]
