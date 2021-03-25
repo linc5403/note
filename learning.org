@@ -13,10 +13,6 @@
      @Runwith - import org.junit.runner.RunWith;
    #+end_example
 
-
-
-
-
 * Mapper的配置
 
   1. @MapperScan
@@ -80,8 +76,6 @@
     @TableId(type = IdType.ASSIGN_UUID)
 
     缺省type为None。 只有当插入数据主键为空时才会根据类型生成主键
-
-    
 
 * 杂记
 
@@ -172,3 +166,64 @@
     也可以加上 ~-XX:HeapDumpPath=<file-or-dir-path>~ 选项用以指定输出的目录
 
     [[https://www.baeldung.com/java-heap-dump-capture][参考连接]]
+
+** spring boot 项目不退出
+
+   #+begin_example
+     <dependency>
+	 <groupId>org.apache.camel</groupId>
+	 <artifactId>camel-spring-boot-starter</artifactId>
+	 <version>2.17.0</version>
+     </dependency>
+
+     camel.springboot.main-run-controller=true
+   #+end_example
+
+** 命令行下的UDP/TCP客户端和服务器端 - netcat(nc)
+
+   https://help.ubidots.com/en/articles/937233-sending-tcp-udp-packets-using-netcat
+
+   https://linuxhint.com/send_receive_udp_packets_linux_cli/
+
+   - To start sever using nc command use below command in System B terminal
+
+     #+begin_example
+       $ nc –u –l 9999
+     #+end_example
+
+   - To connect to server using nc command use below command in System A terminal
+
+     #+begin_example
+       $ nc -u 192.168.1.102 9999
+     #+end_example
+
+   - begin as a server that listens at port 2399:
+     
+     #+begin_example
+       $ nc -l 2399
+     #+end_example
+
+   - use the server to connect to the port (2399) recently opened, from the client side:
+
+     #+begin_example
+       $ nc localhost 2399
+     #+end_example
+
+** redis
+
+*** 指定db ~-n~
+    
+*** 带密码 ~-a~
+
+*** 删除key
+
+    
+    ~redis-cli -h -xxxx -p 26379 -n 2 -a xxxx keys "DEVICEREGISTER:*_*_*" | xargs redis-cli -h x.x.x.x -p 26379 -n 2 -a xxxx del~
+
+* TODO 消息系统
+
+  - https://www.cnblogs.com/loveis715/p/5185332.html
+
+  - https://www.tony-bro.com/posts/1578338213/index.html
+
+* TODO gitlab CI

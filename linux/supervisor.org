@@ -1,0 +1,17 @@
+* ini任务
+
+  #+begin_example
+    [program:mqtt-client]
+    autostart=true
+    autorestart = true
+    startsecs=10
+    startretries=200
+    command = /usr/bin/java -jar /home/ftpuser/ftp_dir/conntext-0.0.1-SNAPSHOT.jar
+    directory = 
+    stdout_logfile_backups = 20
+    stdout_logfile=/home/ftpuser/log/parse-access.log
+    stdout_logfile_maxbytes=10MB
+    stderr_logfile_backups = 20
+    stderr_logfile=/home/ftpuser/log/parse-access-err.log
+    stderr_logfile_maxbytes=10MB
+  #+end_example
