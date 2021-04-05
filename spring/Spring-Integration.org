@@ -1,0 +1,5 @@
+In Spring Integration, a Messaging Gateway (see figure 1.7) is a connection that’s specific to bidirectional messaging. If an incoming request needs to be serviced by multiple threads but the invoker needs to remain unaware of the messaging system, an inbound gateway provides the solution. On the outbound side, an incoming message can be used in a synchronous invocation, and the result is sent on the reply channel. For example,outbound gateways can be used for invoking web services and for synchronous request-reply interactions over JMS.
+
+[[file:./img/01fig07.jpg]]
+
+[[file:./img/01fig08.jpg]]

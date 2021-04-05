@@ -227,3 +227,8 @@
   - https://www.tony-bro.com/posts/1578338213/index.html
 
 * TODO gitlab CI
+
+* Redis
+
+  
+  redis-cli -h host -p 26379 -n 2 -a 123456 keys "DEVICEREGISTER:*_*_*" | xargs redis-cli -h host -p 26379 -n 2 -a 123456 del
