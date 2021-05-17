@@ -65,7 +65,7 @@
 
      ${ } 仅仅为一个纯碎的 string 替换，在动态 SQL 解析阶段将会进行变量替换
 
-* Mybatis Plus 使用
+* TODO Mybatis Plus 使用
 
 ** 注解
 
@@ -226,9 +226,245 @@
 
   - https://www.tony-bro.com/posts/1578338213/index.html
 
+  - https://stackoverflow.com/questions/33902543/spring-integration-tcp-server-push-to-client
+    
+  #+begin_example
+    You can use collaborating channel adapters for completely arbitrary messaging between peers.
+
+    See TCP Events.
+
+    The tcp inbound channel adapter (actually the connection factory) will publish a TcpConnectionOpenEvent when the client connects.
+
+    You can use an ApplicationListener to receive these events.
+
+    The event contains a connectionId. You can then start sending messages to a tcp outbound channel adapter with this connectionId in the header named ip_connectionId (IpHeaders.CONNECTION_ID).
+
+    Inbound messages (if any) from the client received by the inbound adapter will have the same value in the header.
+
+    Simply configure a server connection factory and configure both adapters to use it.
+
+    If the server has to open the socket, use client-mode="true" and inject a client connection factory.
+
+
+  #+end_example
+
 * TODO gitlab CI
+
+  https://blog.sonatype.com/how-to-use-gitlab-ci-with-nexus
 
 * Redis
 
   
   redis-cli -h host -p 26379 -n 2 -a 123456 keys "DEVICEREGISTER:*_*_*" | xargs redis-cli -h host -p 26379 -n 2 -a 123456 del
+
+* DONE 正则表达式
+  CLOSED: [2021-04-13 Tue 07:41]
+
+  https://juejin.cn/post/6844903845227659271
+
+** 过滤掉空白行或是#/;开始的注释行
+
+     #+begin_example
+       grep -Ev "^$|[#;]" server.conf
+
+       # 或放到()里面，表示匹配空行或是空白字符开头跟一个#或是;的行
+       grep -Ev "^($|\s*[#;])" test
+     #+end_example
+
+** 匹配区间
+
+     #+begin_example
+       除了换行符之外的任何字符 . 句号,除了句子结束符
+
+
+       单个数字, [0-9] \d digit
+
+
+       除了[0-9] \D not digit
+
+
+       包括下划线在内的单个字符，[A-Za-z0-9_] \w word
+
+
+       非单字字符 \W not word
+
+
+       匹配空白字符,包括空格、制表符、换页符和换行符 \s space
+
+
+       匹配非空白字符 \S not space
+
+     #+end_example
+
+** 匹配次数
+      
+       #+begin_example
+	 0次或1次 	?
+	 且问,此事有还无
+
+	 0次或无数次 	,*
+	 宇宙洪荒,辰宿列张：宇宙伊始，从无到有，最后星宿布满星空
+
+	 1次或无数次	+
+	 一加, +1
+
+	 特定次数	{x}, {min, max}
+	 可以想象成一个数轴，从一个点，到一个射线再到线段。min和max分别表示了左闭右闭区间的左界和右界
+
+       #+end_example
+
+** 子表达式
+
+     1. 分组
+
+	  以 ~(~ 和 ~)~ 元字符所包含的正则表达式被分为一组，每一个分组都是一个子表达式，它也是构成高级正则表达式的基础。
+
+     2. 回溯引用
+	 
+	  模式的后面部分引用前面已经匹配到的子字符串
+	 
+	  #+begin_src sh
+	    ➜  videos grep -E "\b(\w+)\s\1" t.txt
+	    Hello what what is the first thing, and I am am scq000.
+	  #+end_src
+
+	  回溯引用的语法像\1,\2,....,其中\1表示引用的第一个子表达式，\2表示引用的第二个子表达式，以此类推。而\0则表示整个表达式。
+
+     3. 逻辑处理
+
+	与或非
+
+* Docker 
+
+  Manage Docker as a non-root user
+
+  https://docs.docker.com/engine/install/linux-postinstall/
+
+* yum
+
+** bash completion
+
+   Package bash-completion missing from Yum in CentOS
+
+   yum install epel-release.noarch bash-completion.noarch
+
+
+** 不要update
+
+* Linux
+  
+  - 使用adduser/deluser而非useradd/userdel
+
+* DONE Nginx
+  CLOSED: [2021-04-13 Tue 07:46]
+** 参考资料
+  https://segmentfault.com/a/1190000022315733
+
+  #+begin_example
+    1. location =    # 精准匹配
+    2. location ^~   # 带参前缀匹配
+    3. location ~    # 正则匹配（区分大小写）
+    4. location ~*   # 正则匹配（不区分大小写）
+    5. location /a   # 普通前缀匹配，优先级低于带参数前缀匹配。
+    6. location /    # 任何没有匹配成功的，都会匹配这里处理
+  #+end_example
+  
+  #+begin_example
+    location 实际使用建议
+    所以实际使用中，个人觉得至少有三个匹配规则定义，如下：
+
+    直接匹配网站根，通过域名访问网站首页比较频繁，使用这个会加速处理，官网如是说。
+
+    这里是直接转发给后端应用服务器了，也可以是一个静态首页。第一个必选规则：
+
+    location = / {
+	proxy_pass http://tomcat:8080/index
+    }
+    第二个必选规则是处理静态文件请求，这是 nginx 作为 http 服务器的强项，有两种配置模式，目录匹配或后缀匹配，任选其一或搭配使用：
+
+    location ^~ /static/ {
+	root /webroot/static/;
+    }
+    location ~* \.(gif|jpg|jpeg|png|css|js|ico)$ {
+	root /webroot/res/;
+    }
+    第三个规则就是通用规则，用来转发动态请求到后端应用服务器，非静态文件请求就默认是动态请求，自己根据实际把握，毕竟目前的一些框架的流行，带.php,.jsp后缀的情况很少了：
+
+    location / {
+	proxy_pass http://tomcat:8080/
+    }
+  #+end_example
+
+** Location快速定位到主页
+
+   #+begin_example
+    # 精确匹配/然后返回index.html，提高查找效率，用于主页访问
+    location = / {
+        root /home/linc/nginx-conf/app1;
+        # 不能使用index, 因为index会触发nginx的内部重定向
+        # index index.html -> 这个会在server中查找其他可以匹配的location
+        try_files /index.html =404;
+    }
+   #+end_example
+
+** DONE rewrite
+   CLOSED: [2021-04-13 Tue 07:46]
+   #+begin_example
+     # 这个location和下面的location配合，访问/app1/index.html会被改写为访问/app2/index.html, 然后重定向到第二个location
+     location /app1/index.html {
+	 root /home/linc/nginx-conf/app1;
+	 ## break vs last
+	 ### break表示不再进入其他的location处理，只在当前的location里进行处理
+	 ### last表示重写后交给其他的location进行处理
+	 ## 所以，这个地方，需要使用last来让请求进入到下一个location处理
+	 # rewrite /app1/(.*) /app2/$2 last;
+	 rewrite /app1/(.*) /app2/$2 break;
+     }
+
+     location /app2 {
+	 root /home/linc/nginx-conf/;
+	 # try_files $uri $uri/;
+	 # try_files $uri /index.html;
+     }
+   #+end_example
+** TODO React refrsh 404
+
+   https://www.ghosind.com/2020/08/14/react-404-after-reload
+
+   https://stackoverflow.com/questions/44648389/react-router-app-on-nginx-server/44657439
+
+* TODO CROS
+  https://developer.mozilla.org/zh-CN/docs/Web/HTTP/CORS
+
+  https://developer.mozilla.org/zh-CN/docs/conflicting/Web/HTTP/CORS
+
+  https://segmentfault.com/a/1190000019485883
+
+* TODO HTTPS
+  https://www.xncoding.com/2018/03/12/fullstack/nginx-websocket.html
+
+  https://pentacent.medium.com/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
+
+* TODO kafka
+
+** 生产环境部署
+
+   https://docs.confluent.io/platform/current/kafka/deployment.html
+
+* TODO CSRF
+
+* TODO Serializer
+
+  https://simon-aubury.medium.com/kafka-with-avro-vs-kafka-with-protobuf-vs-kafka-with-json-schema-667494cbb2af
+
+* TODO 多账户统一登录
+
+  https://cloud.tencent.com/developer/article/1482479
+
+* TODO 订单
+  #+begin_example
+    1、商品基础属性及库存（SKU）
+    2、订单以及订单详情（Order&OrderItems)，OrderItems里面的record肯定与某个SKU关联上。同时你们的这种订单，一定包含个性化定制信息，一般都可以用一个字段将个性化信息保存起来（比如订酒店，可能包含日期、住几晚、单间还是标间、其他特殊要求等）
+    3、Shipment，订单只是与客户签订的一个意向合同，那么shipment就是你们如何去履约这个合同的载体。这种情况下，一类商品就可以设计成一种shipment，具体的履约方式、过程和状态，都可以放到这个模型里。
+	总结：订单是面向用户的模型，代表着一个销售或者销售意向合同。shipment是面向内部实际操作环节的模型，代表系统如何去跟踪和记录订单的每个不同类型的商品是如何履约的。
+  #+end_example
