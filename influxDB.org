@@ -1,0 +1,14 @@
+* 基本概念
+
+  - measurement: 数据库的表
+  - field: k-v pair
+  - tag: 这个指标值的元数据
+
+  InfluxDB里存储的数据被称为时间序列数据，其包含一个数值，就像CPU的load值或是温度值类似的。时序数据有零个或多个数据点，每一个都是一个指标值。数据点包括time(一个时间戳)，measurement(例如cpu_load)，至少一个k-v格式的field(也即指标的数值例如 “value=0.64”或者“temperature=21.2”)，零个或多个tag，其一般是对于这个指标值的元数据(例如“host=server01”, “region=EMEA”, “dc=Frankfurt)。
+  
+  在概念上，你可以将measurement类比于SQL里面的table，其 *主键索引总是时间戳* 。tag和field是在table里的其他列， *tag是被索引起来的* ， *field没有* 。不同之处在于，在InfluxDB里，你可以有几百万的measurements，你不用事先定义数据的scheme，并且 *null值不会被存储* 。
+
+  将数据点写入InfluxDB，只需要遵守如下的行协议：
+
+  ~<measurement>[,<tag-key>=<tag-value>...] <field-key>=<field-value>[,<field2-key>=<field2-value>...] [unix-nano-timestamp]~
+
