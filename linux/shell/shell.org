@@ -10,7 +10,6 @@
    | fslint  | 还是查找重复文件           |                                      |
 
 ** shell cmd
-
 *** [[https://www.gnu.org/software/coreutils/manual/html_node/index.html][参考材料]]
 
 *** 文件类型
@@ -561,7 +560,6 @@
       #+end_src
 
 ** 条件测试
-   
 *** 文件状态测试
 
     | symbol | mean          |
@@ -680,7 +678,6 @@
 
 *** TODO command substitution
 ** 控制流结构
-
 *** if then else
     
     #+BEGIN_SRC sh
